@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>MVE Thesis</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: pink;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+		li{
+    margin: 10px 0;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Helvetica, sans-serif;
+  background-color: #333;
+}
+
+/* Style the header */
+header {
+  background-color: #333;
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;
+  color: white;
+}
+
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 21%;
+  height: 350px; /* only for demonstration, should be removed */
+  background: #333;
+  color: white;
+  padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 79%;
+  color: white;
+  background-color: #333;
+  height: 350px; /* only for demonstration, should be removed */
+}
+
+
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+footer {
+  background-color: #333;
+  padding: 10px;
+  text-align: center;
+  color: white;
+}
+
+
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>The Relationship of Geodemographics and Written Online Customer Review Creation: Insights from Brazil</h2>
+</header>
+
+<section>
+  <nav>
+    <ol>
+	    <li><a href="SAO_PAULO_P1_rmdformat.html">Merging internal datsasets</a></li> 
+			<li><a href="SAO_PAULO_P2_rmdformat.html">Text cleaning</a></li> 
+      <li><a href="SAO_PAULO_P3_rmdformat.html">Derived variables</a></li>
+      <li><a href="SAO_PAULO_P4_rmdformat.html">External merge & first insights</a>
+    </ol>
+  </nav>
+  
+  <article>
+    <h1>Introduction</h1>
+    <p>
+      Welcome to methodological presentation of my thesis for the master of Marketing Analytics and Data Science at the University of Groningen, Faculty of Economics and Business. 
+      It is split up into several pages, located on the left.
+      The first pages are about exploring and cleansing the 'internal' dataset. 
+      I refer to it as such because it is the dataset that was initially assigned by the university. 
+      It is a <a href="https://www.kaggle.com/olistbr/brazilian-ecommerce">public dataset</a> published on Kaggle. 
+      It contains review and order data of approximately 100k Brazilian shoppers at an online marketplace called Olist.<br>
+      <br>
+      The Olist dataset was enhanced with data of the 2010 population census in Brazil. 
+      Combining both sets was one of the main challenges of the project. 
+      The bulk of the project was done in R (version 4.03). 
+      Lemmatization was done using Python (version 3.8) because of my preference for spaCy. 
+      After the fact I discovered that it could also be done from R using the 'spacyr' package. For those in a similar situation it would probably be easier to just use that instead. Myself, I didn't mind it too much, it was a nice change of scenery.
+      Analyses reported in the thesis were done in STATA (version 16) but I did them in R as well, just to demonstrate.
+      I coded on several OS's but in the end, stuck with Windows 10 64-bit. This might make a difference in the second part where
+      Windows seems to represent hispanic characters by default differently to Unix systems.
+    </p>
+		        
+  </article>
+</section>
+
+<footer>
+  <p><i>By Michiel van Eldik</i></p>
+ 
+</footer>
+
+</body>
+</html>
