@@ -1,0 +1,343 @@
+---
+title: "P1_text_processing"
+author: "Michiel van Eldik"
+date: "`r Sys.Date()`"
+output:
+   rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+# __<a href="index.html">Back to main</a>__
+
+# __1. Introduction__
+The focus of the thesis was not specifically on text analysis, however, 
+an important condition for robustness is that effects hold despite freight issues.
+This requires us to be able to recognize freight issues. 
+The dataset provides estimated and delivered times but a glance at the written reviews
+reveals that this likely occurs much more frequently than is recorded.
+The goal of this page is hence to be able to indicate, from the written messages, whether
+there the message was freight-related. This can be done using a fairly simple filtering list.
+This works best if words are lemmatized. The entire process of cleaning to filtering is presented. 
+
+```{r message=FALSE, warning=FALSE}
+library(tidytext)
+library(dplyr)
+library(qdap)
+library(stringi)
+```
+
+```{r }
+input <- read.csv("full_geomerged_df.csv")
+brazil_df <- input
+```
+
+# __2. Pre-lemmatization sentence cleaning__
+Remove unnecessary characters.
+```{r }
+# For message
+brazil_df  <- brazil_df %>%
+  mutate(
+    # Remove punctuation 
+    review_comment_message = gsub("[[:punct:]]+"," ", review_comment_message),
+    # Remove digits
+    review_comment_message = gsub("[[:digit:]]+"," ", review_comment_message),
+    # remove double characters except ss and rr
+    review_comment_message = gsub("([a-q t-z])\\1+", "\\1", 
+                                  review_comment_message, 
+                                  perl = TRUE),
+    # Get rid of line break strings
+    review_comment_message = gsub("\r?\n|\r", " ", review_comment_message)
+  )
+
+# for title
+brazil_df  <- brazil_df %>%
+  mutate(
+    # Remove punctuation 
+    review_comment_title = gsub("[[:punct:]]+"," ", review_comment_title),
+    # Remove digits
+    review_comment_title = gsub("[[:digit:]]+"," ", review_comment_title),
+    # remove double characters except ss and rr
+    review_comment_title = gsub("([a-q t-z])\\1+", "\\1", 
+                                review_comment_title, 
+                                perl = TRUE),
+    # Get rid of line break strings
+    review_comment_title = gsub("\r?\n|\r", " ", review_comment_title)
+  )
+```
+Remove extremely short comments except for "ok".
+```{r }
+brazil_df <- brazil_df %>%
+  mutate(
+    review_comment_message = ifelse(
+      nchar(review_comment_message) < 3 & review_comment_message != "ok",
+      "",
+      review_comment_message),
+    
+    review_comment_title = ifelse(
+      nchar(review_comment_title) < 3 & review_comment_title != "ok",
+      "",
+      review_comment_title)
+        )
+```
+Convert everything to lower case.
+```{r }
+brazil_df <- brazil_df %>%
+  mutate(
+    review_comment_message = tolower(review_comment_message),
+    review_comment_title = tolower(review_comment_title)
+  )
+
+```
+Record the comment length before transformations because we might want to refer to this at some point.
+```{r }
+brazil_df <- brazil_df %>%
+  mutate(
+    # total characters in the string
+    bef_nchar = nchar(brazil_df$review_comment_message),
+    # total number of separations (words) in the string 
+    bef_nwords = lengths(strsplit(brazil_df$review_comment_message, " ")),
+    # average number of letters per word 
+    nchar_perword = nchar(brazil_df$review_comment_message) / lengths(strsplit(brazil_df$review_comment_message, " "))
+  )
+```
+
+# __3. Lemmatization__
+At the end of point 2, the data table was saved as a csv file and opened in a Jupyter Notebook
+where the texts (both title and message) were lemmatized and loaded back into this script.\n 
+The Python script looks as follows:
+
+```{python eval=FALSE}
+import spacy
+import pandas as pd
+import math
+
+nlp = spacy.load("pt_core_news_sm") # Portuguese
+
+def lemma_function(df, write_name):
+    """Lemmatize a column, either title or message, and write to csv."""
+    
+    sub_df = df
+    sub_df = sub_df
+    lemma_listje = []
+    seperator = " "
+    
+    for i in sub_df.iloc[:,1][sub_df.iloc[:,1].notna() == True]: # beautiful list comprehension of Python
+        i = nlp(i)
+        interim_listje = []
+        for word in i:
+            interim_listje.append(word.lemma_)
+        interim_listje = seperator.join(interim_listje)
+        lemma_listje.append(interim_listje)
+    
+    nan_indices = sub_df.loc[pd.notna(sub_df["review_comment_{}".format(write_name)]), :].index
+    d = {write_name:lemma_listje, 'index':nan_indices}
+    new_df = pd.DataFrame(d)
+    new_df.to_csv('lemmatized_{}.csv'.format(write_name))
+    
+# call function that was defined above
+lemma_function(df_title, 'title')
+lemma_function(df_message, 'message')
+```
+
+
+# __4. Filtering unwanted words__
+
+```{r echo=FALSE}
+brazil_df$index <- c(0: (nrow(brazil_df) - 1))
+
+
+MergeStuff <- function(brazil_df, df, type){
+  df <- df %>%
+    select(-X)
+  
+  brazil_df <- merge(brazil_df, df, 
+                     by.x = "index",
+                     by.y = "index",
+                     all.x = TRUE)
+  
+  return(brazil_df)
+}
+
+# Load data from "Spacen met Spacy.ipynb"
+lemmatized_message <- read.csv("lemmatized_message.csv")
+lemmatized_title <- read.csv("lemmatized_title.csv")
+
+brazil_df <- MergeStuff(brazil_df, lemmatized_title, "title")
+brazil_df <- MergeStuff(brazil_df, lemmatized_message, "message")
+
+brazil_df <- brazil_df %>%
+  mutate(review_comment_title = as.character(title),
+         review_comment_message = as.character(message)) %>%
+  select(-title, 
+         -message)
+```
+Standardize comments to ASCII encoding representation.
+```{r }
+brazil_df <- brazil_df %>%
+  mutate(
+    # Convert message
+    review_comment_message = stri_trans_general(
+      review_comment_message, 
+       "Latin-ASCII"),
+    # Convert title
+    review_comment_title = stri_trans_general(
+      review_comment_title,
+       "Latin-ASCII")
+        )
+```
+
+# __4.1. Obtaining a collection of words to discard__
+Many words in the text are not useful or meaningful. I hence create a kind of dictionary (not technically one though) to store all of the unwanted words. Beforehand, I create a special version of the data with a format that is basically a dataframe with all words and their frequencies.  
+```{r }
+# tidy text format shows word frequencies
+text_df <- tibble(line = 1:nrow(brazil_df), 
+                  text = as.character(brazil_df$review_comment_message))
+
+# get all words in the entire text
+new_text_df <- text_df %>%
+  unnest_tokens(word, text) %>%
+  count(word, sort = TRUE)
+
+dic <- vector()
+# add word length column, needed for filtering super short words and stuff
+new_text_df <- new_text_df %>%
+  mutate(word_length = nchar(word))
+```
+Capture very short words (shorter than 3 characters)
+```{r }
+# df to capture the words
+super_short_words <- new_text_df %>%
+  filter(word_length < 3) 
+# add to dic
+dic <- c(dic, super_short_words$word)
+# Moving forward, we can filter these out of the tidy df
+new_text_df <- new_text_df %>%
+  filter(!word_length < 3) 
+```
+Capture words that are extended, such as "adoreiiiiiiii"
+```{r }
+weird_words <- new_text_df %>%
+  filter(grepl("([a-z\\d])\\1\\1", word))
+# How many?
+nrow(brazil_df[grepl("([a-z\\d])\\1\\1", brazil_df$review_comment_message),])
+# add to dic
+dic <- c(dic, weird_words$word)
+# Moving forward, we can filter these out of the tidy df
+new_text_df <- new_text_df %>%
+  filter(!grepl("([a-z\\d])\\1\\1", word))
+```
+Words with no vowels.
+```{r }
+no_vowels <- new_text_df %>%
+  filter(!grepl("[aeiou]+", word))
+# How many?
+nrow(brazil_df[!grepl("[aeiou]+", brazil_df$review_comment_message) &
+               ! is.na(brazil_df$review_comment_message),])
+# add to dic
+dic <- c(dic, no_vowels$word)
+# Moving forward, we can filter these out of the tidy df
+new_text_df <- new_text_df %>%
+  filter(grepl("[aeiou]+", word))
+```
+Words with only vowels.
+```{r }
+on_vowels <- new_text_df %>%
+  filter(!grepl("[^aeiou]+", word))
+# How many? 0
+nrow(brazil_df[!grepl("[^aeiou]+", brazil_df$review_comment_message) &
+                 ! is.na(brazil_df$review_comment_message),])
+# add to dic
+dic <- c(dic, on_vowels$word)
+# Moving forward, we can filter these out of the tidy df
+new_text_df <- new_text_df %>%
+  filter(grepl("[^aeiou]+", word))
+```
+Stop words. 
+```{r }
+# external stop words document
+port_stopwords <- read.table("stopwords.txt", sep = "", header=F)
+# standardize them
+port_stopwords <- port_stopwords %>%
+  mutate(V1 = stri_trans_general(V1,  "Latin-ASCII"))
+# Keep nao
+port_stopwords <- port_stopwords %>%
+  filter(!grepl("nao", V1))
+# add to dic
+dic <- c(dic, port_stopwords$V1)
+```
+
+Finally, I get rid of all the potential duplicates in the dictionary. As I mentioned before, it's not technically a dictionary but rather a list of words that we want to get rid of because they aren't useful or meaningful.
+```{r }
+# Keep only unique elements in dic
+dic <- unique(dic)
+```
+
+# __4.2. Using the collection to discard the unwanted words__
+Firstly, create a new data frame to store the newly corrected messages.
+```{r }
+# message
+empty_df <- as.data.frame(brazil_df$review_id)
+empty_df$iterator <- c(1:nrow(empty_df))
+empty_df$new_stuff <- 0 
+```
+For every review comment message, fill `empty_df` on the corresponding row with a corrected version. 
+```{r eval = FALSE}
+iterator <- 1
+for (i in brazil_df$review_comment_message) {
+  # rm_stopwords() removes words in a string if they match with a list of words
+  print(paste(rm_stopwords(i, dic)[[1]], collapse = " "))
+  empty_df$new_stuff[iterator] <- paste(rm_stopwords(i, dic)[[1]], collapse = " ")
+  iterator = iterator + 1
+}
+brazil_df$review_comment_message <- empty_df$new_stuff
+```
+The same is done for title, rather than message. 
+```{r eval = FALSE}
+empty_df <- as.data.frame(brazil_df$review_id)
+empty_df$iterator <- c(1:nrow(empty_df))
+empty_df$new_stuff <- 0 
+```
+
+```{r eval = FALSE}
+iterator <- 1
+for (i in brazil_df$review_comment_title) {
+  print(paste(rm_stopwords(i, dic)[[1]], collapse = " "))
+  empty_df$new_stuff[iterator] <- paste(rm_stopwords(i, dic)[[1]], collapse = " ")
+  iterator = iterator + 1
+}
+brazil_df$review_comment_message <- empty_df$new_stuff
+```
+
+# __5. Create the column of message + title__
+The motivation behind creating this column is that it can help to identify if someone has made any type of response at all,
+whether that be a message or simply a title. Also, it gives a full picture of someone's response if they used both a title and message.
+
+```{r eval = FALSE}
+brazil_df$message_and_title <- paste(brazil_df$review_comment_message,
+                                     brazil_df$review_comment_title, 
+                                     sep = " ")
+```
+
+```{r eval = FALSE}
+brazil_df <- brazil_df %>%
+  mutate(
+    message_and_title = ifelse(
+      is.na(review_comment_message) == FALSE & is.na(review_comment_title) == FALSE,
+      paste(review_comment_message, review_comment_title, sep = " "), 0
+                              ),
+    message_and_title = ifelse(
+      is.na(review_comment_message) == TRUE & is.na(review_comment_title) == FALSE,
+      review_comment_title, message_and_title
+                              ),
+    message_and_title = ifelse(
+      is.na(review_comment_message) == FALSE & is.na(review_comment_title) == TRUE,
+      review_comment_message, message_and_title
+                              ),
+    message_and_title = ifelse(message_and_title == "0", NA, message_and_title
+                              )
+        )
+```

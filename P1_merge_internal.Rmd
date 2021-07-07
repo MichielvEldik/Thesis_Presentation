@@ -57,7 +57,7 @@ translated_products_df <- merge(products_df,
 translated_products_df <- translated_products_df[,2:10]
 ```
 
-# __2. Review <--> Order__
+# __2. Review with order merge__
 The first join has the  intricacy that
 
 * A unique `order_id` can be related to multiple unique `review_ids`;
@@ -229,7 +229,7 @@ reviews_orders <- merge(fixed_df,
                         all.x = TRUE)
 ```
 
-# __3. Items <--> Customer__
+# __3. Items with customer merge__
 
 Data are currently at an order_line level of disaggregation. Data must be aggregated to the level of our unit of analysis: `review_id`. This can be done by:
 
@@ -401,7 +401,7 @@ fixed_leveled_up_df<- merge(fixed_leveled_up_df,
                   all.x = TRUE) 
 ```
 
-# __5. Merging with geographic data__
+# __5. Coordinates merge__
 
 There are multiple coordinates available for each zip code prefix. This is resolved by finding the centroid of all coordinates 
 associated with one zip code prefix. There can be overlap in zip code prefixes but this never within states. Hence, the savest bet is to do this seperately for each state. A function was created to do so efficiently.
