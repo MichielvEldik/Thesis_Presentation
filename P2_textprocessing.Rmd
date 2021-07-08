@@ -190,7 +190,7 @@ brazil_df <- brazil_df %>%
         )
 ```
 
-# __4.1. Obtaining a collection of words to discard__
+## __4.1. Obtaining a collection of words to discard__
 Many words in the text are not useful or meaningful. I hence create a kind of dictionary (not technically one though) to store all of the unwanted words. Beforehand, I create a special version of the data with a format that is basically a dataframe with all words and their frequencies.  
 ```{r }
 # tidy text format shows word frequencies
@@ -276,7 +276,7 @@ Finally, I get rid of all the potential duplicates in the dictionary. As I menti
 dic <- unique(dic)
 ```
 
-# __4.2. Using the collection to discard the unwanted words__
+## __4.2. Using the collection to discard the unwanted words__
 Firstly, create a new data frame to store the newly corrected messages.
 ```{r }
 # message

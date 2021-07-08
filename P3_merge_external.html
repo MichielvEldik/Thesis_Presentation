@@ -1844,8 +1844,15 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="SidebarItems" id="toc">
             <ul>
             <li><a href="#back-to-main"><strong><a href="index.html">Back to main</a></strong></a></li>
-            <li><a href="#defining-the-necessary-functions"><strong>Defining the necessary functions</strong></a></li>
-            <li><a href="#define-municipalities-per-metro-area"><strong>Define municipalities per metro area</strong></a></li>
+            <li><a href="#introduction"><strong>1. Introduction</strong></a></li>
+            <li><a href="#defining-the-necessary-functions"><strong>2. Defining the necessary functions</strong></a></li>
+            <li><a href="#define-municipalities-per-metro-area"><strong>3. Define municipalities per metro area</strong></a></li>
+            <li><a href="#joining-the-internal-olist-and-external-census-data-sets"><strong>4. Joining the internal (Olist) and external (census) data sets</strong></a><ul>
+            <li><a href="#non-metropolitan-areas"><strong>4.1. Non-metropolitan areas</strong></a></li>
+            <li><a href="#metropolitan-areas"><strong>4.2. Metropolitan areas</strong></a></li>
+            </ul></li>
+            <li><a href="#bind-together-the-municipality-level-data-and-the-metro-data"><strong>5. Bind together the municipality-level data and the metro data</strong></a></li>
+            <li><a href="#make-everything-neat-and-nice"><strong>6. Make everything neat and nice</strong></a></li>
             </ul>
           </div>
           <div data-position="sidebar:post-end" class="InjectedComponents"><div class="dark-theme-toggler"><div class="toggle"><div class="toggle-track"><div class="toggle-track-check"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAVlpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KTMInWQAABlJJREFUWAm1V3tsFEUcntnXvXu0tBWo1ZZHihBjCEWqkHiNaMLDRKOtQSKaiCFKQtS/SbxiFCHGCIkmkBSMwZhQNTFoQZD0DFiwtCDFAkdDqBBBKFj63rvdnfH7zfVo5aFBj0l2Z/dm5vd98/0es8dYjlpr62azufnDQNZcU1PciMfjWvb9rvZSMk4Ayfb36pLH13189GC8LAtIRLLPt+pzwrCuLq4ISEv/gHmitrAwfPbEkXc/ad4dL6iujrvyX0jcitgd/yZlZqftP6995Mr5TVLa22Tn8XVX2g/XLSRjUu7Q79jonS7I7hS7/0oOb5VyqF52n98oj7esXX07EjlxwXWisRmSnm3b29TTM8iYrjmFBWExubxwY/uhNas4r/WySl1fc5cetDMd7ydl+lMJJRw5WC8ud62Xx5rfepzwxgZmbhUYNS5Stvsj4yo2GXJEFBVHWDBkfdbR9HpYBaaUajDnBLKKpl1xRKYcgGtMCqEzTaSnThk/SQT0uJqTqFNBmXMCsZE48DzRZRMBRjv1GHNdk3HBImF9ZUvTyxM40pMKVc4JZBXQOLOFoDeKSxdp6HIQcO4rjYT9fn0pjbz9GLt7BAAODmjSVReXUMFzNW5x5vfxp2mIxZjIuQKJxAmFa+is2DQJJQ0JyBVExNOYcJnPxx/6/utnijmP555ALEagKAGGnGn64QORBjARcIA/yJk7JMJBLRrNtybTvH88KGjCf2jK86bhzmMcwDKFZEQvbIhxFYhChoMWMzU2iWznlIBEVJOsP+1bdX/ALx9l7jApADeDAEcMkE90JnUmmGl4USKQ0xhoW3JB5XY0YrxYWhLwMZZypUyjDGH35AbNwgUGiFBPpuGbHCpAOV1ZGXf2f/taftAv31DyeymN2d1IhAFAwTOmnzF/kKcdh3me7CYCOVNgycju84u8DeVlwfFq9/ZlTfldYrMUjOlrkjkD+rU+WzCROkcEchIDHR011syZW9JHD7y07N6JvhWMpz3pugaTkB6lWFVCKkhck0zzeMp2utq+uHrmfxOgoCO/Z8CXPlEQ1bdH8wgvhSIkEG0ICcQeExIFGdimjvKka7btJFZuaXOammIGKUCFQ53j9EN1dYKWqHf0t2w407W2tgs6h89ZnImjB55flh81tt9XirjjDuSl+oIPRQ0iWPgNZ5GqTqbBe3vSzEl5n5PhWKwocyR2HlqYN61qV18WjYjE8JLARZPQsUSim8foIRYTlGr02Ly7piASFRtKJ4VfieYhxdS2JcDVMN6xVOKZyrCGm8b108lrLRVzvptLH7IoEFLFANes6KnDi+uxfmvFnF17oALq5u1agu3/YfHkcSFzeSggV5eXRfIB7CHNcO5SUI+Ih5Ir7f4MAV9IqdFzdZgNpZw1Gcs1mNvgGbTbqQ9/cz7ZuuhgyYRQ49ljTyWHhr2DwpNHHFf+5gnWZ3Bharo+0TD5dNMw5vv9RlVpSRDHK4TlnoukhtYApuOHejSZQuo5g/A9BysdKRCyLl6062fN37OXMDlvUJtUrtmxo0avrW3wTrYs3jJ9RvRVChrmSmanPMpX2OXMsmDGh6AiEIwBAlvkOqIdBy+8JyAz8pz7QxiDth4KDy5uAlwzrWTnwC8Vc4KVAMZ3YUZ+IqoIjP3h5KFFX1ZMy3uW+7RhEDHgTi0zC9rS7uhPCDiNrGFyqBeERtKN/B0YlyFCkw0NJ5C0Ojv7zvT1a1WV1TuvZDdL4NTgB7CASYpsen6gqvG5jmTf5qHedADgkBl3D0nkSgNhZACDyi0FUKZRr3IdRjgN4WPPoFMIIegIK3mqd38fS80mcJKelM4szNyzZtQbkchGePuBRS8Eg9pHU8ojRQpSqs+ajAIwTjjUMQ/nvTNM0kicwYxZIYMh/891DYi+fvedB+c1xsm4lDU6ya+Axtz+RiAzEVYbajQOpq17F0R9QevNcEhfcU+xvyQQUalGJBSesqOkgPQ4YNyUZL9fSvUPDjoNAwN8/dwFjaczNkc3ptaMud1EIDtGcmXTcefO2cGSvKIFfp/2JIJxlq7xEl3nVPM4fDeIbPkD16/ptNc0bDu7qxbsu0R2JGywWMIjF2ft3tjfloAyQAGXiOn8hrqwbVvMXzaO+QeHXP6nF0wvX74Hf4NGG5GPjSlYoyM3P/0FbCT6zvM/yYoAAAAASUVORK5CYII=" role="presentation" style="pointer-events: none;" width="16" height="16"></div> <div class="toggle-track-x"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAVlpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KTMInWQAABwNJREFUWAmtV1tsFFUY/s6Z2d22zLYlZakUCRVaQcqlWIiCiS1gTEB9UAO+GR9En3iQGI0xJiSiRB98MjEq8cEQTSBeHhQM0V7whtEGDWC90BYitxahtNtu25058/v/ZzvLbilawJNM5+yZ89+//1LgJhYRNLW1uDfBAvpGiIk2O5auvfFxqIH3ZJ8/u06GN6Z9+wVl5SjcD1IbZa/UPkPyYl2uR4dreoD2bnbYxTlBBRytkHXtAREphP5KuH4lddx9h70yxX05t7yYXwGb6W8nx1jibpl2rFlGBxcG9M18okOrn7Bnk/BAO/4bI0UeEE1zjBp3UmvjOxJXJdaKN/ZiIu4tOZrAb4aTdZAZArKmWeiiJZ6jt5tiagdCS9+6cgO1Ne6Mvhe+ixTIfyDVhipnK9p+P0Edqx9RW/YZtQVGmOLChRxNNlyPsTEgPQKMB3dbEHa0h1awYmQ83enTd2vmUtvKd1Glv2RkzBb+kZGRrKtjzG60Wguhd/lJZBingbcfWWe72vjT75bJDrhYtvA0hrurETDr5HyF2Knb1MM4ab//xIoOqueA0edRnkkinTyJdYvqLFDZO4zUPFCvVoDjJq4T7TE61IWh4x5KqxX5KVKkX8WZ/t2ov2cb3MHt4dhIyOxIJxJOOF6xRx/99BksXLoecWcXytILMNBDqKpnGZWPquYfPxY8iXGR9fK+SgFrgcRPXPjVqhehL+3EmZ5RGJQi1QBU8TPThQnOQzm+5UXGIcetUeEAfP13VwzpI+w1jGJWdSliNfvVhiMPiOsllJag4M/UGHiqM6dlBb2OTLKHHV6KkvogrJ4XhBWniWK/Gp1MQyf93FOeUXKmKk/FzJxbQtKLjFXYT4USupy8fQVir2ynVEBiZMG0qtOHMS/AW4Gwrk7BG3C1F0B5nqNKE0CME4MfVRLPnXkBKe+ipvoFhNQywOhdghvLi0F8ReyVXV4BKTBRbbe5f64zR/DHsdZw1hJfeWlHl/GNRJzDxrd5m192z78TMaVnKELZoINZS4BzQ7vtnZljSnha/pPCbkuxzXcupYwI5tIeCpGc0Yp9tWHZQy/rmYhRfNgg4bHJBYLzGkxsRJF4XKlE2jBOHNSv3kY7Tj6vthzPFl61BrYwqFlmEQhtSVXmLiksxLmtRgYXI1ULU61JJ4eVKmG3/5sCVgpbMT6OMJ2E08/29Xf3w6v4FnHdCjfWgXu/O8Z5mLdCkeRs2khHe1DqOtQwbHWTAnM5S2HNmhALYo5KjkPFrMMKjZl6HxhWIAb0BqE+/73GrBRQUsKYiBu4JX8ycI6wtw+i5ef3NZpsrKVSHYCP37jwGDgeE1SA0S/xtl5SU2fs1ApEp0qTLVRjgyycDSsLHMSwmFltZMStR3uLLg6BdLhDa5dC6ryU2pHBe1BVO9tUcwfitJt2CLJZUHoG6T7Op75u0IyK31TCPcwFqgPk/KCaD3dFOuZBCO7xvCT/j048b3I3c7F2+WuOW7qdgkucFYlcQ4qop3yzTX7WaKfOCccye3Ts1Etq0+a/BHCF1yPgF3tAUkR6OrtGmo6gl94qqcXKh3rDyrOkPa58URoWcov2Mo6M+0QjrqKB+b7++oMa9Sz+ZkM0mie6aAtnGUvhmxaI+TogPOSQedgWioGSHFLn3v4kLh4HRspNmOGv41k+55siLFp2z6xYeJjhljFcbmxJlr4ga06TbevSByz/glQq4BJx46/c+237PbBqEYKxX3HpmKZEnQnr65X20hqJYaNcLoFOLiJk2LuBbyg7Q0OEn+hm0P3honxFD6rdxYorKpeIoi4YSSvyQHQIbM5t4+YNxLj/OxhVOOE4585qGpjnq+wSx6Q9CtNxTjd5klB+g6Mv36r0+b9cZFi44WYkHdG2ZWb3TtOUOXyVAlKlpGvJIAJ3eBMyfYS5C0qRZGtC85j+4sOasDe9xznPYezhhO/2Q6eP2fSOvYHOjtuQ1a9Q1VKynVDaMc8E0tptdxUsTFpFIYjcZKcbnoaQTNdiqCwNlL4G7oziSqGnT1ALf34vhk4R5zU3qYV9ONp9K88RtouShE68JwaU8dFw5W617shWa9ykeaBIn2hcsvPgL00k45QdTCZuSVcTRNs+8fnyLvooQfR5iujAnR9bxfY2xOVOxFS8SK3Le0l48VyYu1M8HRe5JD8wKPTjYnifaK3Wfn/GChYQ8ZAi6WRzWgqLV5YrsVLnZaVSoXU1g9gOIDwFySiGi+Zdrnzr7J3r+SMuszlcQCRn8lNGcTuSy2jOI7o9mxjZo+vR3ej3tN+ifRSOyUTS0+VMOid93cCubeiy/6TImS0QxRSCq2vxKr45zV+FQnjWH6D2xg+E9EatLcLAdHTgtGGD80D6jM0+aOl4wJgO/f96R2aJKCQ3yvgftRhdFMOpd6oAAAAASUVORK5CYII=" role="presentation" style="pointer-events: none;" width="16" height="16"></div></div> <div class="toggle-thumb"></div></div> <input type="checkbox" aria-label="Switch between Dark and Default theme" class="toggler-screen-reader-only"></div></div>
@@ -1869,243 +1876,714 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="page-content has-page-title">
 <div id="back-to-main" class="section level1">
 <h1><strong><a href="index.html">Back to main</a></strong></h1>
+</div>
+<div id="introduction" class="section level1">
+<h1><strong>1. Introduction</strong></h1>
+<p>This page is about obtaining, cleansing, and blending external data with the review data set. External data, in this case, is the 2010 Brazil nationwide population census. This was carried out by the Brazilian Institute of Geography and Statistics (Instituto Brasileiro de Geografia e Estatística). Data on human development and urbanization of an area are used because eventually, we want to make the link between such geodemographic variables and review length and incidence. The written report describes the decisions in the data methodology in detail (from page 15 onwards). The paragraphs below provide a short summary.</p>
+<p>Firstly, the internal (Olist) data is split up into two parts: those observations that are located within a metropolitan area and those that are located outside of a metropolitan area. This is done because the external (census) data is available at a neighborhood level for metropolitan areas but only at a municipality level in non-metropolitan areas.</p>
+<p>The cases in a non-metropolitan area can be linked with relative ease. Both internal and external data sets have a column with the name of the municipality so the data sets can be joined based on that name. All that needs to be done is make sure that the formats are the same so that identical matches can be found.</p>
+<p>The cases in a metropolitan area are more tricky to link up with the external data as there isn’t a common key shared between internal (Olist) and external (census):</p>
+<ul>
+<li><strong>Internal (Olist):</strong> has coordinates based on zip-code prefixes and municipality names.</li>
+<li><strong>External (census):</strong> has neighborhood names.</li>
+</ul>
+<p>There are two ways to approach this: (1) retrieve neighborhood names from the coordinates of the internal (Olist) data and use this as a key for merging (reverse geocoding); or (2) retrieve coordinates from neighborhood names of the external (census) data and match both data sets based on the distance between coordinates (forward geocoding). Reverse geocoding is possible, however, it requires me to make a special account with Google to use their API. It’s for free, but I do have to provide credit card details and there is a maximum number of queries. Per contra, forward geocoding can be done using the OpenStreetMap Nomatim API which is a completely open-source and free to use tool that only puts a limit on the number of queries I can make per minute. Therefore, my preference went out to forward geocoding.</p>
+<p>Note that treatment of external data is done seperately for each of the 21 metropolitan areas.</p>
+<p>The libraries used in this part:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(readxl)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(tidyr)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(dplyr)</span></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">library</span>(corrplot)</span></code></pre></div>
-<pre><code>## corrplot 0.84 loaded</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(FNN)</span></code></pre></div>
-<pre><code>## Warning: package &#39;FNN&#39; was built under R version 4.0.5</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">library</span>(tmaptools)</span></code></pre></div>
-<pre><code>## Warning: package &#39;tmaptools&#39; was built under R version 4.0.5</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">library</span>(geosphere)</span></code></pre></div>
-<pre><code>## Warning: package &#39;geosphere&#39; was built under R version 4.0.5</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">library</span>(sp)</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">library</span>(stringi)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(corrplot)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(FNN)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(tmaptools)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">library</span>(geosphere)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(sp)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">library</span>(stringi)</span></code></pre></div>
 </div>
 <div id="defining-the-necessary-functions" class="section level1">
-<h1><strong>Defining the necessary functions</strong></h1>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>locality_names &lt;-<span class="st"> </span><span class="cf">function</span>(input_data, data_level) {</span>
-<span id="cb14-2"><a href="#cb14-2"></a>  </span>
-<span id="cb14-3"><a href="#cb14-3"></a>  <span class="cf">if</span> (data_level <span class="op">==</span><span class="st"> &quot;state&quot;</span>) {</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    level_indicator &lt;-<span class="st"> &quot;st.&quot;</span></span>
-<span id="cb14-5"><a href="#cb14-5"></a>  } <span class="cf">else</span> <span class="cf">if</span> (data_level <span class="op">==</span><span class="st"> &quot;municip&quot;</span>) {</span>
-<span id="cb14-6"><a href="#cb14-6"></a>    level_indicator &lt;-<span class="st"> &quot;mc.&quot;</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a>  } <span class="cf">else</span> {</span>
-<span id="cb14-8"><a href="#cb14-8"></a>    level_indicator &lt;-<span class="st"> &quot;udh.&quot;</span></span>
-<span id="cb14-9"><a href="#cb14-9"></a>  }</span>
-<span id="cb14-10"><a href="#cb14-10"></a>  </span>
-<span id="cb14-11"><a href="#cb14-11"></a>  old_colnames &lt;-<span class="st"> </span><span class="kw">colnames</span>(input_data)</span>
-<span id="cb14-12"><a href="#cb14-12"></a>  new_colnames &lt;-<span class="st"> </span><span class="kw">c</span>()</span>
-<span id="cb14-13"><a href="#cb14-13"></a>  countertje &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb14-14"><a href="#cb14-14"></a>  </span>
-<span id="cb14-15"><a href="#cb14-15"></a>  <span class="cf">for</span> (i <span class="cf">in</span> old_colnames) {</span>
-<span id="cb14-16"><a href="#cb14-16"></a>    new_colnames[countertje] &lt;-<span class="st"> </span><span class="kw">paste</span>(level_indicator, i, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb14-17"><a href="#cb14-17"></a>    countertje &lt;-<span class="st"> </span>countertje <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb14-18"><a href="#cb14-18"></a>  }</span>
-<span id="cb14-19"><a href="#cb14-19"></a>  </span>
-<span id="cb14-20"><a href="#cb14-20"></a>  input_data &lt;-<span class="st"> </span><span class="kw">setNames</span>(input_data, new_colnames)</span>
-<span id="cb14-21"><a href="#cb14-21"></a>  </span>
-<span id="cb14-22"><a href="#cb14-22"></a>  <span class="kw">return</span>(input_data)</span>
-<span id="cb14-23"><a href="#cb14-23"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>column_fixer &lt;-<span class="st"> </span><span class="cf">function</span>(new_data, data_level){</span>
-<span id="cb15-2"><a href="#cb15-2"></a>  <span class="cf">if</span> (<span class="kw">grepl</span>(<span class="st">&quot;Brasil&quot;</span>, <span class="kw">head</span>(new_data[, <span class="st">&quot;Territorialidades&quot;</span>], <span class="dt">n =</span> <span class="dv">1</span>)) <span class="op">&amp;</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="st">      </span><span class="kw">grepl</span>(<span class="st">&quot;Fontes:&quot;</span>, <span class="kw">tail</span>(new_data[, <span class="st">&quot;Territorialidades&quot;</span>], <span class="dt">n =</span> <span class="dv">1</span>))) {</span>
-<span id="cb15-4"><a href="#cb15-4"></a>    <span class="kw">print</span>(<span class="st">&quot;Ready for action.&quot;</span>)</span>
-<span id="cb15-5"><a href="#cb15-5"></a>    </span>
-<span id="cb15-6"><a href="#cb15-6"></a>    new_data &lt;-<span class="st"> </span>new_data <span class="op">%&gt;%</span></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">Territorialidades =</span> <span class="kw">as.character</span>(Territorialidades),</span>
-<span id="cb15-8"><a href="#cb15-8"></a>             <span class="dt">Territorialidades =</span> <span class="kw">stri_trans_general</span>(Territorialidades, <span class="st">&quot;Latin-ASCII&quot;</span>),</span>
-<span id="cb15-9"><a href="#cb15-9"></a>             <span class="dt">Territorialidades =</span> <span class="kw">tolower</span>(Territorialidades)</span>
-<span id="cb15-10"><a href="#cb15-10"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="st">      </span><span class="kw">filter</span>(<span class="kw">row_number</span>() <span class="op">&lt;=</span><span class="st"> </span><span class="kw">n</span>()<span class="op">-</span><span class="dv">3</span></span>
-<span id="cb15-12"><a href="#cb15-12"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-13"><a href="#cb15-13"></a><span class="st">      </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">row_number</span>() <span class="op">==</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb15-14"><a href="#cb15-14"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-15"><a href="#cb15-15"></a><span class="st">      </span><span class="kw">drop_na</span>(Territorialidades</span>
-<span id="cb15-16"><a href="#cb15-16"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-17"><a href="#cb15-17"></a><span class="st">      </span><span class="kw">mutate</span>(</span>
-<span id="cb15-18"><a href="#cb15-18"></a>        <span class="dt">urbanity =</span> <span class="st">`</span><span class="dt">População urbana 2010</span><span class="st">`</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>,</span>
-<span id="cb15-19"><a href="#cb15-19"></a>        <span class="dt">rurality =</span> <span class="st">`</span><span class="dt">População rural 2010</span><span class="st">`</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>,</span>
-<span id="cb15-20"><a href="#cb15-20"></a>        <span class="dt">rurality =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(<span class="st">`</span><span class="dt">População rural 2010</span><span class="st">`</span>) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="dv">0</span>, rurality)</span>
-<span id="cb15-21"><a href="#cb15-21"></a>      ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb15-22"><a href="#cb15-22"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">cumul_age_24 =</span> </span>
-<span id="cb15-23"><a href="#cb15-23"></a>               <span class="st">`</span><span class="dt">População masculina de 0 a 4 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span></span>
-<span id="cb15-24"><a href="#cb15-24"></a><span class="st">               `</span><span class="dt">População masculina de 5 a 9 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span></span>
-<span id="cb15-25"><a href="#cb15-25"></a><span class="st">               `</span><span class="dt">População masculina de 10 a 14 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span></span>
-<span id="cb15-26"><a href="#cb15-26"></a><span class="st">               `</span><span class="dt">População masculina de 15 a 19 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span></span>
-<span id="cb15-27"><a href="#cb15-27"></a><span class="st">               `</span><span class="dt">População masculina de 20 a 24 anos de idade 2010</span><span class="st">`</span></span>
-<span id="cb15-28"><a href="#cb15-28"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-29"><a href="#cb15-29"></a><span class="st">      </span><span class="kw">select</span>(</span>
-<span id="cb15-30"><a href="#cb15-30"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 0 a 4 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-31"><a href="#cb15-31"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 5 a 9 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-32"><a href="#cb15-32"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 10 a 14 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-33"><a href="#cb15-33"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 15 a 19 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-34"><a href="#cb15-34"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 20 a 24 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-35"><a href="#cb15-35"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 25 a 29 anos de idade 2010</span><span class="st">`</span>,</span>
-<span id="cb15-36"><a href="#cb15-36"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 30 a 34 anos de idade 2010</span><span class="st">`</span></span>
-<span id="cb15-37"><a href="#cb15-37"></a>      ) <span class="op">%&gt;%</span></span>
-<span id="cb15-38"><a href="#cb15-38"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">young_ratio =</span> cumul_age_<span class="dv">24</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>)</span>
-<span id="cb15-39"><a href="#cb15-39"></a>    </span>
-<span id="cb15-40"><a href="#cb15-40"></a>    new_data &lt;-<span class="st"> </span><span class="kw">locality_names</span>(new_data, data_level)</span>
-<span id="cb15-41"><a href="#cb15-41"></a>    </span>
-<span id="cb15-42"><a href="#cb15-42"></a>    <span class="kw">return</span>(new_data)</span>
-<span id="cb15-43"><a href="#cb15-43"></a>    </span>
-<span id="cb15-44"><a href="#cb15-44"></a>  } <span class="cf">else</span> {</span>
-<span id="cb15-45"><a href="#cb15-45"></a>    <span class="kw">print</span>(<span class="st">&quot;Not ready for action&quot;</span>)</span>
-<span id="cb15-46"><a href="#cb15-46"></a>    <span class="kw">return</span>(<span class="st">&quot;Something is wrong&quot;</span>)</span>
-<span id="cb15-47"><a href="#cb15-47"></a>    </span>
-<span id="cb15-48"><a href="#cb15-48"></a>  }</span>
-<span id="cb15-49"><a href="#cb15-49"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>get_cors &lt;-<span class="st"> </span><span class="cf">function</span>(datasetje){</span>
-<span id="cb16-2"><a href="#cb16-2"></a>  counter &lt;-<span class="st"> </span><span class="dv">1</span> </span>
-<span id="cb16-3"><a href="#cb16-3"></a>  subbie_df &lt;-<span class="st"> </span>datasetje</span>
-<span id="cb16-4"><a href="#cb16-4"></a>  <span class="co"># Handles when no coordinates can be retrieved</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>  <span class="cf">for</span> (i <span class="cf">in</span> subbie_df<span class="op">$</span>udh.Territorialidades){</span>
-<span id="cb16-6"><a href="#cb16-6"></a>    <span class="kw">tryCatch</span>({</span>
-<span id="cb16-7"><a href="#cb16-7"></a>      retrieved_cors &lt;-<span class="st"> </span><span class="kw">geocode_OSM</span>(i)</span>
-<span id="cb16-8"><a href="#cb16-8"></a>      subbie_df<span class="op">$</span>udh.long[counter] &lt;-<span class="st"> </span>retrieved_cors[[<span class="st">&quot;coords&quot;</span>]][[<span class="st">&quot;x&quot;</span>]]</span>
-<span id="cb16-9"><a href="#cb16-9"></a>      subbie_df<span class="op">$</span>udh.lat[counter] &lt;-<span class="st"> </span>retrieved_cors[[<span class="st">&quot;coords&quot;</span>]][[<span class="st">&quot;y&quot;</span>]]</span>
-<span id="cb16-10"><a href="#cb16-10"></a>    },</span>
-<span id="cb16-11"><a href="#cb16-11"></a>    <span class="dt">error =</span> <span class="cf">function</span>(e){</span>
-<span id="cb16-12"><a href="#cb16-12"></a>      subbie_df<span class="op">$</span>udh.long[counter] &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a>      subbie_df<span class="op">$</span>udh.lat[counter] &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a>    })</span>
-<span id="cb16-15"><a href="#cb16-15"></a>    <span class="kw">print</span>(i)</span>
-<span id="cb16-16"><a href="#cb16-16"></a>    counter &lt;-<span class="st"> </span>counter <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a>  }</span>
-<span id="cb16-18"><a href="#cb16-18"></a>  subbie_df &lt;-<span class="st"> </span>subbie_df <span class="op">%&gt;%</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">udh.lat =</span> <span class="kw">ifelse</span>(udh.lat <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">NA</span>, udh.lat),</span>
-<span id="cb16-20"><a href="#cb16-20"></a>           <span class="dt">udh.long =</span> <span class="kw">ifelse</span>(udh.long <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">NA</span>, udh.long))</span>
-<span id="cb16-21"><a href="#cb16-21"></a>  <span class="co"># Returns to coordinate retriever</span></span>
-<span id="cb16-22"><a href="#cb16-22"></a>  <span class="kw">return</span>(subbie_df)</span>
-<span id="cb16-23"><a href="#cb16-23"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>coordinate_retriever &lt;-<span class="st"> </span><span class="cf">function</span>(input_udh_data, city_name) {</span>
-<span id="cb17-2"><a href="#cb17-2"></a>  input_udh_data &lt;-<span class="st"> </span>input_udh_data <span class="op">%&gt;%</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
-<span id="cb17-4"><a href="#cb17-4"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;:.*&quot;</span>, <span class="st">&quot;&quot;</span>, udh.Territorialidades),</span>
-<span id="cb17-5"><a href="#cb17-5"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">ifelse</span>(</span>
-<span id="cb17-6"><a href="#cb17-6"></a>        <span class="kw">grepl</span>(<span class="st">&quot;/&quot;</span>, udh.Territorialidades), </span>
-<span id="cb17-7"><a href="#cb17-7"></a>        <span class="kw">gsub</span>(<span class="st">&quot;/.*&quot;</span>, <span class="st">&quot;&quot;</span>, udh.Territorialidades), </span>
-<span id="cb17-8"><a href="#cb17-8"></a>        udh.Territorialidades),</span>
-<span id="cb17-9"><a href="#cb17-9"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">s*</span><span class="ch">\\</span><span class="st">([^</span><span class="ch">\\</span><span class="st">)]+</span><span class="ch">\\</span><span class="st">)&quot;</span>,<span class="st">&quot;&quot;</span>, udh.Territorialidades),</span>
-<span id="cb17-10"><a href="#cb17-10"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">paste</span>(udh.Territorialidades, city_name, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>),</span>
-<span id="cb17-11"><a href="#cb17-11"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">s+&quot;</span>, <span class="st">&quot; &quot;</span>, udh.Territorialidades) <span class="co"># white spaces</span></span>
-<span id="cb17-12"><a href="#cb17-12"></a>    )</span>
-<span id="cb17-13"><a href="#cb17-13"></a>  <span class="co"># drop non unique </span></span>
-<span id="cb17-14"><a href="#cb17-14"></a>  input_udh_data &lt;-<span class="st"> </span>input_udh_data[<span class="op">!</span><span class="kw">duplicated</span>(input_udh_data<span class="op">$</span>udh.Territorialidades), ]</span>
-<span id="cb17-15"><a href="#cb17-15"></a>  <span class="co"># add longitude and latitude columns (empty)</span></span>
-<span id="cb17-16"><a href="#cb17-16"></a>  input_udh_data<span class="op">$</span>udh.lat &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb17-17"><a href="#cb17-17"></a>  input_udh_data<span class="op">$</span>udh.long &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb17-18"><a href="#cb17-18"></a>  <span class="co"># Call the query function</span></span>
-<span id="cb17-19"><a href="#cb17-19"></a>  input_udh_data_retrieved_cors &lt;-<span class="st"> </span><span class="kw">get_cors</span>(input_udh_data)</span>
-<span id="cb17-20"><a href="#cb17-20"></a>  <span class="co"># Return data set</span></span>
-<span id="cb17-21"><a href="#cb17-21"></a>  <span class="kw">return</span>(input_udh_data_retrieved_cors)</span>
-<span id="cb17-22"><a href="#cb17-22"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>udh_merge_ex_with_in &lt;-<span class="st"> </span><span class="cf">function</span>(internal_data, external_data, metro_munics) {</span>
-<span id="cb18-2"><a href="#cb18-2"></a>  </span>
-<span id="cb18-3"><a href="#cb18-3"></a>  external_data &lt;-<span class="st"> </span>external_data[</span>
-<span id="cb18-4"><a href="#cb18-4"></a>    <span class="op">!</span><span class="kw">is.na</span>(external_data<span class="op">$</span>udh.lat) <span class="op">|</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(external_data<span class="op">$</span>udh.long),]</span>
-<span id="cb18-5"><a href="#cb18-5"></a>  </span>
-<span id="cb18-6"><a href="#cb18-6"></a>  internal_data &lt;-<span class="st"> </span>internal_data[</span>
-<span id="cb18-7"><a href="#cb18-7"></a>    internal_data<span class="op">$</span>customer_city <span class="op">%in%</span><span class="st"> </span>metro_munics <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(internal_data<span class="op">$</span>centroid_lat),]</span>
-<span id="cb18-8"><a href="#cb18-8"></a>  </span>
-<span id="cb18-9"><a href="#cb18-9"></a>  nn2 &lt;-<span class="st"> </span><span class="kw">get.knnx</span>(</span>
-<span id="cb18-10"><a href="#cb18-10"></a>    external_data[,<span class="kw">c</span>(<span class="st">&quot;udh.lat&quot;</span>, <span class="st">&quot;udh.long&quot;</span>)], </span>
-<span id="cb18-11"><a href="#cb18-11"></a>    internal_data[,<span class="kw">c</span>(<span class="st">&quot;centroid_lat&quot;</span>, <span class="st">&quot;centroid_long&quot;</span>)], </span>
-<span id="cb18-12"><a href="#cb18-12"></a>    <span class="dv">2</span>)</span>
-<span id="cb18-13"><a href="#cb18-13"></a>  </span>
-<span id="cb18-14"><a href="#cb18-14"></a>  internal_data<span class="op">$</span>local_index &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(internal_data)) </span>
-<span id="cb18-15"><a href="#cb18-15"></a>  external_data<span class="op">$</span>local_index &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(external_data))</span>
-<span id="cb18-16"><a href="#cb18-16"></a>  </span>
-<span id="cb18-17"><a href="#cb18-17"></a>  internal_data<span class="op">$</span>index_other_data &lt;-<span class="st"> </span>nn2<span class="op">$</span>nn.index[,<span class="dv">1</span>]</span>
-<span id="cb18-18"><a href="#cb18-18"></a>  internal_data<span class="op">$</span>dist &lt;-<span class="st"> </span>nn2<span class="op">$</span>nn.dist[,<span class="dv">1</span>]</span>
-<span id="cb18-19"><a href="#cb18-19"></a>  </span>
-<span id="cb18-20"><a href="#cb18-20"></a>  married &lt;-<span class="st"> </span><span class="kw">merge</span>(internal_data,</span>
-<span id="cb18-21"><a href="#cb18-21"></a>                   external_data,</span>
-<span id="cb18-22"><a href="#cb18-22"></a>                   <span class="dt">by.x =</span> <span class="st">&quot;index_other_data&quot;</span>,</span>
-<span id="cb18-23"><a href="#cb18-23"></a>                   <span class="dt">by.y =</span> <span class="st">&quot;local_index&quot;</span>)</span>
-<span id="cb18-24"><a href="#cb18-24"></a>  <span class="kw">return</span>(married)</span>
-<span id="cb18-25"><a href="#cb18-25"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Purpose: Haversine variant of udh_merge_ex_within</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a>haversine_function &lt;-<span class="st"> </span><span class="cf">function</span>(brazil_df, udh_df, metros_list){</span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="co"># udh clean</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a>  udh_df &lt;-<span class="st"> </span>udh_df[<span class="op">!</span><span class="kw">is.na</span>(udh_df<span class="op">$</span>udh.lat),]</span>
-<span id="cb19-5"><a href="#cb19-5"></a>  <span class="co"># Select right municipal subset</span></span>
-<span id="cb19-6"><a href="#cb19-6"></a>  internal_data &lt;-<span class="st"> </span>brazil_df[</span>
-<span id="cb19-7"><a href="#cb19-7"></a>    brazil_df<span class="op">$</span>customer_city <span class="op">%in%</span><span class="st"> </span>metros_list <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(brazil_df<span class="op">$</span>centroid_lat),]</span>
-<span id="cb19-8"><a href="#cb19-8"></a>  <span class="co"># identifier of coordinate combinations</span></span>
-<span id="cb19-9"><a href="#cb19-9"></a>  internal_data<span class="op">$</span>coordinate_id &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">as.character</span>(internal_data<span class="op">$</span>centroid_long), </span>
-<span id="cb19-10"><a href="#cb19-10"></a>                                       <span class="kw">as.character</span>(internal_data<span class="op">$</span>centroid_lat), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</span>
-<span id="cb19-11"><a href="#cb19-11"></a>  <span class="co"># Select only relevant columns </span></span>
-<span id="cb19-12"><a href="#cb19-12"></a>  coordinates_uniques &lt;-<span class="st"> </span>internal_data <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb19-13"><a href="#cb19-13"></a><span class="st">    </span><span class="kw">select</span>(centroid_lat, </span>
-<span id="cb19-14"><a href="#cb19-14"></a>           centroid_long, </span>
-<span id="cb19-15"><a href="#cb19-15"></a>           coordinate_id)</span>
-<span id="cb19-16"><a href="#cb19-16"></a>  <span class="co"># Get rid of duplicates to speed up the whole process</span></span>
-<span id="cb19-17"><a href="#cb19-17"></a>  coordinates_uniques &lt;-<span class="st"> </span>coordinates_uniques[<span class="op">!</span><span class="kw">duplicated</span>(coordinates_uniques), ]</span>
-<span id="cb19-18"><a href="#cb19-18"></a>  coordinates_uniques<span class="op">$</span>nn_index &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb19-19"><a href="#cb19-19"></a>  coordinates_uniques<span class="op">$</span>nn_dist &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb19-20"><a href="#cb19-20"></a>  <span class="co"># wrap the whol thing</span></span>
-<span id="cb19-21"><a href="#cb19-21"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(coordinates_uniques)) {</span>
-<span id="cb19-22"><a href="#cb19-22"></a>    emptyvec &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">nrow</span>(udh_df))</span>
-<span id="cb19-23"><a href="#cb19-23"></a>    <span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(udh_df)){</span>
-<span id="cb19-24"><a href="#cb19-24"></a>      emptyvec[b] &lt;-<span class="st"> </span><span class="kw">distHaversine</span>(</span>
-<span id="cb19-25"><a href="#cb19-25"></a>        coordinates_uniques[i,<span class="kw">c</span>(<span class="st">&quot;centroid_long&quot;</span>, <span class="st">&quot;centroid_lat&quot;</span>)],</span>
-<span id="cb19-26"><a href="#cb19-26"></a>        udh_df[b,<span class="kw">c</span>(<span class="st">&quot;udh.long&quot;</span>, <span class="st">&quot;udh.lat&quot;</span>)], )</span>
-<span id="cb19-27"><a href="#cb19-27"></a>    }</span>
-<span id="cb19-28"><a href="#cb19-28"></a>    <span class="co"># index of minimal distance </span></span>
-<span id="cb19-29"><a href="#cb19-29"></a>    coordinates_uniques[i,]<span class="op">$</span>nn_index &lt;-<span class="st"> </span><span class="kw">which.min</span>(emptyvec)</span>
-<span id="cb19-30"><a href="#cb19-30"></a>    <span class="co"># the minimal distance itself</span></span>
-<span id="cb19-31"><a href="#cb19-31"></a>    coordinates_uniques[i,]<span class="op">$</span>nn_dist &lt;-<span class="st"> </span><span class="kw">min</span>(emptyvec)</span>
-<span id="cb19-32"><a href="#cb19-32"></a>  }</span>
-<span id="cb19-33"><a href="#cb19-33"></a>  <span class="co"># Get reid of centroid_lat, -long, to avoid duiplicates in merge back </span></span>
-<span id="cb19-34"><a href="#cb19-34"></a>  coordinates_uniques &lt;-<span class="st"> </span>coordinates_uniques <span class="op">%&gt;%</span></span>
-<span id="cb19-35"><a href="#cb19-35"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>centroid_lat,</span>
-<span id="cb19-36"><a href="#cb19-36"></a>           <span class="op">-</span>centroid_long)</span>
-<span id="cb19-37"><a href="#cb19-37"></a>  <span class="co"># Merge duplicate coordiantes back to data</span></span>
-<span id="cb19-38"><a href="#cb19-38"></a>  merged_back &lt;-<span class="st"> </span><span class="kw">merge</span>(internal_data,</span>
-<span id="cb19-39"><a href="#cb19-39"></a>                       coordinates_uniques,</span>
-<span id="cb19-40"><a href="#cb19-40"></a>                       <span class="dt">by.x =</span> <span class="st">&quot;coordinate_id&quot;</span>,</span>
-<span id="cb19-41"><a href="#cb19-41"></a>                       <span class="dt">by.y =</span> <span class="st">&quot;coordinate_id&quot;</span>,</span>
-<span id="cb19-42"><a href="#cb19-42"></a>                       <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb19-43"><a href="#cb19-43"></a>  <span class="co"># Merge census data based on inices</span></span>
-<span id="cb19-44"><a href="#cb19-44"></a>  merged_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(merged_back, </span>
-<span id="cb19-45"><a href="#cb19-45"></a>                    udh_df,</span>
-<span id="cb19-46"><a href="#cb19-46"></a>                    <span class="dt">by.x =</span> <span class="st">&quot;nn_index&quot;</span>,</span>
-<span id="cb19-47"><a href="#cb19-47"></a>                    <span class="dt">by.y =</span> <span class="st">&quot;X&quot;</span>,</span>
-<span id="cb19-48"><a href="#cb19-48"></a>                    <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb19-49"><a href="#cb19-49"></a>  <span class="co"># Coordinate ID no longer needed</span></span>
-<span id="cb19-50"><a href="#cb19-50"></a>  merged_<span class="dv">2</span> &lt;-<span class="st"> </span>merged_<span class="dv">2</span> <span class="op">%&gt;%</span></span>
-<span id="cb19-51"><a href="#cb19-51"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>coordinate_id)</span>
-<span id="cb19-52"><a href="#cb19-52"></a>  </span>
-<span id="cb19-53"><a href="#cb19-53"></a>  <span class="kw">return</span>(merged_<span class="dv">2</span>)</span>
-<span id="cb19-54"><a href="#cb19-54"></a>}</span></code></pre></div>
+<h1><strong>2. Defining the necessary functions</strong></h1>
+<p>This function is called from another function <code>column_fixer</code> and it is used to indicate, in the external data set (census), whether the data are at municipality or neighborhood-level of aggregation.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>locality_names &lt;-<span class="st"> </span><span class="cf">function</span>(input_data, data_level) {</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="cf">if</span> (data_level <span class="op">==</span><span class="st"> &quot;state&quot;</span>) {</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    level_indicator &lt;-<span class="st"> &quot;st.&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>  } <span class="cf">else</span> <span class="cf">if</span> (data_level <span class="op">==</span><span class="st"> &quot;municip&quot;</span>) {</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    level_indicator &lt;-<span class="st"> &quot;mc.&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    level_indicator &lt;-<span class="st"> &quot;udh.&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>  }</span>
+<span id="cb2-10"><a href="#cb2-10"></a>  </span>
+<span id="cb2-11"><a href="#cb2-11"></a>  old_colnames &lt;-<span class="st"> </span><span class="kw">colnames</span>(input_data)</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  new_colnames &lt;-<span class="st"> </span><span class="kw">c</span>()</span>
+<span id="cb2-13"><a href="#cb2-13"></a>  countertje &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15"></a>  <span class="cf">for</span> (i <span class="cf">in</span> old_colnames) {</span>
+<span id="cb2-16"><a href="#cb2-16"></a>    new_colnames[countertje] &lt;-<span class="st"> </span><span class="kw">paste</span>(level_indicator, i, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    countertje &lt;-<span class="st"> </span>countertje <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>  }</span>
+<span id="cb2-19"><a href="#cb2-19"></a>  </span>
+<span id="cb2-20"><a href="#cb2-20"></a>  input_data &lt;-<span class="st"> </span><span class="kw">setNames</span>(input_data, new_colnames)</span>
+<span id="cb2-21"><a href="#cb2-21"></a>  </span>
+<span id="cb2-22"><a href="#cb2-22"></a>  <span class="kw">return</span>(input_data)</span>
+<span id="cb2-23"><a href="#cb2-23"></a>}</span></code></pre></div>
+<p>This function cleans the external data set (census) to ensure it integrates well with the internal dataset once merged. I downloaded the external data set with a few too many columns. Furthermore, some rows are added but not necessary. It does some more things as well.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>column_fixer &lt;-<span class="st"> </span><span class="cf">function</span>(new_data, data_level){</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="co"># the first and last row of each external dataset has some weird general info</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="cf">if</span> (<span class="kw">grepl</span>(<span class="st">&quot;Brasil&quot;</span>, <span class="kw">head</span>(new_data[, <span class="st">&quot;Territorialidades&quot;</span>], <span class="dt">n =</span> <span class="dv">1</span>)) <span class="op">&amp;</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">      </span><span class="kw">grepl</span>(<span class="st">&quot;Fontes:&quot;</span>, <span class="kw">tail</span>(new_data[, <span class="st">&quot;Territorialidades&quot;</span>], <span class="dt">n =</span> <span class="dv">1</span>))) {</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="kw">print</span>(<span class="st">&quot;Ready for action.&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    <span class="co"># standardized character representation: Latin to ASCII</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    new_data &lt;-<span class="st"> </span>new_data <span class="op">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">Territorialidades =</span> <span class="kw">as.character</span>(Territorialidades),</span>
+<span id="cb3-9"><a href="#cb3-9"></a>             <span class="dt">Territorialidades =</span> <span class="kw">stri_trans_general</span>(Territorialidades, <span class="st">&quot;Latin-ASCII&quot;</span>),</span>
+<span id="cb3-10"><a href="#cb3-10"></a>             <span class="dt">Territorialidades =</span> <span class="kw">tolower</span>(Territorialidades)</span>
+<span id="cb3-11"><a href="#cb3-11"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="st">      </span><span class="kw">filter</span>(<span class="kw">row_number</span>() <span class="op">&lt;=</span><span class="st"> </span><span class="kw">n</span>()<span class="op">-</span><span class="dv">3</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="st">      </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">row_number</span>() <span class="op">==</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="st">      </span><span class="kw">drop_na</span>(Territorialidades</span>
+<span id="cb3-17"><a href="#cb3-17"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="st">      </span><span class="co"># Create / derive some new variables based on extant ones</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="st">      </span><span class="kw">mutate</span>(</span>
+<span id="cb3-20"><a href="#cb3-20"></a>        <span class="dt">urbanity =</span> <span class="st">`</span><span class="dt">População urbana 2010</span><span class="st">`</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>,</span>
+<span id="cb3-21"><a href="#cb3-21"></a>        <span class="dt">rurality =</span> <span class="st">`</span><span class="dt">População rural 2010</span><span class="st">`</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>,</span>
+<span id="cb3-22"><a href="#cb3-22"></a>        <span class="dt">rurality =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(<span class="st">`</span><span class="dt">População rural 2010</span><span class="st">`</span>) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="dv">0</span>, rurality)</span>
+<span id="cb3-23"><a href="#cb3-23"></a>      ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-24"><a href="#cb3-24"></a><span class="st">      </span><span class="co"># Again, create / derive new variable based on extant one</span></span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">cumul_age_24 =</span> </span>
+<span id="cb3-26"><a href="#cb3-26"></a>               <span class="st">`</span><span class="dt">População masculina de 0 a 4 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span></span>
+<span id="cb3-27"><a href="#cb3-27"></a><span class="st">               `</span><span class="dt">População masculina de 5 a 9 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="st">               `</span><span class="dt">População masculina de 10 a 14 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="st">               `</span><span class="dt">População masculina de 15 a 19 anos de idade 2010</span><span class="st">`</span> <span class="op">+</span><span class="st"> </span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="st">               `</span><span class="dt">População masculina de 20 a 24 anos de idade 2010</span><span class="st">`</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="st">      </span><span class="co"># After doing this, we can discard them</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="st">      </span><span class="kw">select</span>(</span>
+<span id="cb3-34"><a href="#cb3-34"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 0 a 4 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-35"><a href="#cb3-35"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 5 a 9 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-36"><a href="#cb3-36"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 10 a 14 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-37"><a href="#cb3-37"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 15 a 19 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-38"><a href="#cb3-38"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 20 a 24 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-39"><a href="#cb3-39"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 25 a 29 anos de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb3-40"><a href="#cb3-40"></a>        <span class="op">-</span><span class="st"> `</span><span class="dt">População masculina de 30 a 34 anos de idade 2010</span><span class="st">`</span></span>
+<span id="cb3-41"><a href="#cb3-41"></a>      ) <span class="op">%&gt;%</span></span>
+<span id="cb3-42"><a href="#cb3-42"></a><span class="st">      </span><span class="co"># Yet again, a new, derived variable</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">young_ratio =</span> cumul_age_<span class="dv">24</span> <span class="op">/</span><span class="st"> `</span><span class="dt">População total 2010</span><span class="st">`</span>)</span>
+<span id="cb3-44"><a href="#cb3-44"></a>    <span class="co"># Call function that was mentioned in the previous chunk</span></span>
+<span id="cb3-45"><a href="#cb3-45"></a>    <span class="co"># It basically makes sure that we know at all times whether data are -</span></span>
+<span id="cb3-46"><a href="#cb3-46"></a>    <span class="co"># on  a municipality or neighborhood level of aggregation</span></span>
+<span id="cb3-47"><a href="#cb3-47"></a>    new_data &lt;-<span class="st"> </span><span class="kw">locality_names</span>(new_data, data_level)</span>
+<span id="cb3-48"><a href="#cb3-48"></a>    </span>
+<span id="cb3-49"><a href="#cb3-49"></a>    <span class="kw">return</span>(new_data)</span>
+<span id="cb3-50"><a href="#cb3-50"></a>    </span>
+<span id="cb3-51"><a href="#cb3-51"></a>  } <span class="cf">else</span> {</span>
+<span id="cb3-52"><a href="#cb3-52"></a>    <span class="co"># Data need to be in a particulare format</span></span>
+<span id="cb3-53"><a href="#cb3-53"></a>    <span class="kw">print</span>(<span class="st">&quot;Not ready for action&quot;</span>) </span>
+<span id="cb3-54"><a href="#cb3-54"></a>    <span class="kw">return</span>(<span class="st">&quot;Something is wrong&quot;</span>) </span>
+<span id="cb3-55"><a href="#cb3-55"></a>    </span>
+<span id="cb3-56"><a href="#cb3-56"></a>  }</span>
+<span id="cb3-57"><a href="#cb3-57"></a>}</span></code></pre></div>
+<p>This function uses the extern data set (census), takes the neighborhood names, and uses the function <code>geocode_OSM</code> to access the Nomatim OpenStreetMap API and find corresponding coordinates. In the case that it can’t find anything, an error needs to be handled. This function is called from the <code>coordinate_retriever</code> function (below).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>get_cors &lt;-<span class="st"> </span><span class="cf">function</span>(datasetje){</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  counter &lt;-<span class="st"> </span><span class="dv">1</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  subbie_df &lt;-<span class="st"> </span>datasetje</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="co"># Handles when no coordinates can be retrieved</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="cf">for</span> (i <span class="cf">in</span> subbie_df<span class="op">$</span>udh.Territorialidades){</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="kw">tryCatch</span>({</span>
+<span id="cb4-7"><a href="#cb4-7"></a>      retrieved_cors &lt;-<span class="st"> </span><span class="kw">geocode_OSM</span>(i)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>      subbie_df<span class="op">$</span>udh.long[counter] &lt;-<span class="st"> </span>retrieved_cors[[<span class="st">&quot;coords&quot;</span>]][[<span class="st">&quot;x&quot;</span>]]</span>
+<span id="cb4-9"><a href="#cb4-9"></a>      subbie_df<span class="op">$</span>udh.lat[counter] &lt;-<span class="st"> </span>retrieved_cors[[<span class="st">&quot;coords&quot;</span>]][[<span class="st">&quot;y&quot;</span>]]</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    },</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="dt">error =</span> <span class="cf">function</span>(e){</span>
+<span id="cb4-12"><a href="#cb4-12"></a>      subbie_df<span class="op">$</span>udh.long[counter] &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>      subbie_df<span class="op">$</span>udh.lat[counter] &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>    })</span>
+<span id="cb4-15"><a href="#cb4-15"></a>    <span class="kw">print</span>(i)</span>
+<span id="cb4-16"><a href="#cb4-16"></a>    counter &lt;-<span class="st"> </span>counter <span class="op">+</span><span class="st"> </span><span class="dv">1</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>  }</span>
+<span id="cb4-18"><a href="#cb4-18"></a>  subbie_df &lt;-<span class="st"> </span>subbie_df <span class="op">%&gt;%</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">udh.lat =</span> <span class="kw">ifelse</span>(udh.lat <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">NA</span>, udh.lat),</span>
+<span id="cb4-20"><a href="#cb4-20"></a>           <span class="dt">udh.long =</span> <span class="kw">ifelse</span>(udh.long <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="ot">NA</span>, udh.long))</span>
+<span id="cb4-21"><a href="#cb4-21"></a>  <span class="co"># Returns to coordinate retriever</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>  <span class="kw">return</span>(subbie_df)</span>
+<span id="cb4-23"><a href="#cb4-23"></a>}</span></code></pre></div>
+<p>This function takes as input an external data set (census) for one of the metropolitan areas. It sort of ‘prepares’ the neighborhood names to make sure that queries to OpenStreetMap Nomatim API go as smoothly as possible. The actual query itself is done in the previously discussed function <code>get_cors</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>coordinate_retriever &lt;-<span class="st"> </span><span class="cf">function</span>(input_udh_data, city_name) {</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  input_udh_data &lt;-<span class="st"> </span>input_udh_data <span class="op">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="st">    </span><span class="kw">mutate</span>(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;:.*&quot;</span>, <span class="st">&quot;&quot;</span>, udh.Territorialidades),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">ifelse</span>(</span>
+<span id="cb5-6"><a href="#cb5-6"></a>        <span class="kw">grepl</span>(<span class="st">&quot;/&quot;</span>, udh.Territorialidades), </span>
+<span id="cb5-7"><a href="#cb5-7"></a>        <span class="kw">gsub</span>(<span class="st">&quot;/.*&quot;</span>, <span class="st">&quot;&quot;</span>, udh.Territorialidades), </span>
+<span id="cb5-8"><a href="#cb5-8"></a>        udh.Territorialidades),</span>
+<span id="cb5-9"><a href="#cb5-9"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">s*</span><span class="ch">\\</span><span class="st">([^</span><span class="ch">\\</span><span class="st">)]+</span><span class="ch">\\</span><span class="st">)&quot;</span>,<span class="st">&quot;&quot;</span>, udh.Territorialidades),</span>
+<span id="cb5-10"><a href="#cb5-10"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">paste</span>(udh.Territorialidades, city_name, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>),</span>
+<span id="cb5-11"><a href="#cb5-11"></a>      <span class="dt">udh.Territorialidades =</span> <span class="kw">gsub</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">s+&quot;</span>, <span class="st">&quot; &quot;</span>, udh.Territorialidades) <span class="co"># white spaces</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    )</span>
+<span id="cb5-13"><a href="#cb5-13"></a>  <span class="co"># drop non unique </span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>  input_udh_data &lt;-<span class="st"> </span>input_udh_data[<span class="op">!</span><span class="kw">duplicated</span>(input_udh_data<span class="op">$</span>udh.Territorialidades), ]</span>
+<span id="cb5-15"><a href="#cb5-15"></a>  <span class="co"># add longitude and latitude columns (empty)</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a>  input_udh_data<span class="op">$</span>udh.lat &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>  input_udh_data<span class="op">$</span>udh.long &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a>  <span class="co"># Call the query function</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a>  input_udh_data_retrieved_cors &lt;-<span class="st"> </span><span class="kw">get_cors</span>(input_udh_data)</span>
+<span id="cb5-20"><a href="#cb5-20"></a>  <span class="co"># Return data set</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>  <span class="kw">return</span>(input_udh_data_retrieved_cors)</span>
+<span id="cb5-22"><a href="#cb5-22"></a>}</span></code></pre></div>
+<p>This function uses a nearest neighbor approach based on Euclidean distances to connect the internal data set (Olist) and external dataset (census) based on the sets of coordinates in both data sets. The <code>get.knnx()</code> was used to do this.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>udh_merge_ex_with_in &lt;-<span class="st"> </span><span class="cf">function</span>(internal_data, external_data, metro_munics) {</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  external_data &lt;-<span class="st"> </span>external_data[</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="op">!</span><span class="kw">is.na</span>(external_data<span class="op">$</span>udh.lat) <span class="op">|</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(external_data<span class="op">$</span>udh.long),]</span>
+<span id="cb6-5"><a href="#cb6-5"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6"></a>  internal_data &lt;-<span class="st"> </span>internal_data[</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    internal_data<span class="op">$</span>customer_city <span class="op">%in%</span><span class="st"> </span>metro_munics <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(internal_data<span class="op">$</span>centroid_lat),]</span>
+<span id="cb6-8"><a href="#cb6-8"></a>  </span>
+<span id="cb6-9"><a href="#cb6-9"></a>  nn2 &lt;-<span class="st"> </span><span class="kw">get.knnx</span>(</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    external_data[,<span class="kw">c</span>(<span class="st">&quot;udh.lat&quot;</span>, <span class="st">&quot;udh.long&quot;</span>)], </span>
+<span id="cb6-11"><a href="#cb6-11"></a>    internal_data[,<span class="kw">c</span>(<span class="st">&quot;centroid_lat&quot;</span>, <span class="st">&quot;centroid_long&quot;</span>)], </span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="dv">2</span>)</span>
+<span id="cb6-13"><a href="#cb6-13"></a>  </span>
+<span id="cb6-14"><a href="#cb6-14"></a>  internal_data<span class="op">$</span>local_index &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(internal_data)) </span>
+<span id="cb6-15"><a href="#cb6-15"></a>  external_data<span class="op">$</span>local_index &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(external_data))</span>
+<span id="cb6-16"><a href="#cb6-16"></a>  </span>
+<span id="cb6-17"><a href="#cb6-17"></a>  internal_data<span class="op">$</span>index_other_data &lt;-<span class="st"> </span>nn2<span class="op">$</span>nn.index[,<span class="dv">1</span>]</span>
+<span id="cb6-18"><a href="#cb6-18"></a>  internal_data<span class="op">$</span>dist &lt;-<span class="st"> </span>nn2<span class="op">$</span>nn.dist[,<span class="dv">1</span>]</span>
+<span id="cb6-19"><a href="#cb6-19"></a>  </span>
+<span id="cb6-20"><a href="#cb6-20"></a>  married &lt;-<span class="st"> </span><span class="kw">merge</span>(internal_data,</span>
+<span id="cb6-21"><a href="#cb6-21"></a>                   external_data,</span>
+<span id="cb6-22"><a href="#cb6-22"></a>                   <span class="dt">by.x =</span> <span class="st">&quot;index_other_data&quot;</span>,</span>
+<span id="cb6-23"><a href="#cb6-23"></a>                   <span class="dt">by.y =</span> <span class="st">&quot;local_index&quot;</span>)</span>
+<span id="cb6-24"><a href="#cb6-24"></a>  <span class="kw">return</span>(married)</span>
+<span id="cb6-25"><a href="#cb6-25"></a>}</span></code></pre></div>
+<p>I never wound up using this function. It does pretty much the same thing as the function discussed above, however, it uses Haversine distances rather than Euclidean distances. There is no option in <code>get.knnx()</code> that lets me use Haversine distances so I had to manually program the nearest neighbor algorithm. It gave some weird, sub-optimal results in the end, which also made me wonder if, perhaps, I made a mistake somewhere. If you see anything, let me know!</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Purpose: Haversine variant of udh_merge_ex_within</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>haversine_function &lt;-<span class="st"> </span><span class="cf">function</span>(brazil_df, udh_df, metros_list){</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="co"># udh clean</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  udh_df &lt;-<span class="st"> </span>udh_df[<span class="op">!</span><span class="kw">is.na</span>(udh_df<span class="op">$</span>udh.lat),]</span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="co"># Select right municipal subset</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>  internal_data &lt;-<span class="st"> </span>brazil_df[</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    brazil_df<span class="op">$</span>customer_city <span class="op">%in%</span><span class="st"> </span>metros_list <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(brazil_df<span class="op">$</span>centroid_lat),]</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="co"># identifier of coordinate combinations</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  internal_data<span class="op">$</span>coordinate_id &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">as.character</span>(internal_data<span class="op">$</span>centroid_long), </span>
+<span id="cb7-10"><a href="#cb7-10"></a>                                       <span class="kw">as.character</span>(internal_data<span class="op">$</span>centroid_lat), <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="co"># Select only relevant columns </span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>  coordinates_uniques &lt;-<span class="st"> </span>internal_data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="st">    </span><span class="kw">select</span>(centroid_lat, </span>
+<span id="cb7-14"><a href="#cb7-14"></a>           centroid_long, </span>
+<span id="cb7-15"><a href="#cb7-15"></a>           coordinate_id)</span>
+<span id="cb7-16"><a href="#cb7-16"></a>  <span class="co"># Get rid of duplicates to speed up the whole process</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>  coordinates_uniques &lt;-<span class="st"> </span>coordinates_uniques[<span class="op">!</span><span class="kw">duplicated</span>(coordinates_uniques), ]</span>
+<span id="cb7-18"><a href="#cb7-18"></a>  coordinates_uniques<span class="op">$</span>nn_index &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>  coordinates_uniques<span class="op">$</span>nn_dist &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>  <span class="co"># wrap the whol thing</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(coordinates_uniques)) {</span>
+<span id="cb7-22"><a href="#cb7-22"></a>    emptyvec &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">nrow</span>(udh_df))</span>
+<span id="cb7-23"><a href="#cb7-23"></a>    <span class="cf">for</span> (b <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(udh_df)){</span>
+<span id="cb7-24"><a href="#cb7-24"></a>      emptyvec[b] &lt;-<span class="st"> </span><span class="kw">distHaversine</span>(</span>
+<span id="cb7-25"><a href="#cb7-25"></a>        coordinates_uniques[i,<span class="kw">c</span>(<span class="st">&quot;centroid_long&quot;</span>, <span class="st">&quot;centroid_lat&quot;</span>)],</span>
+<span id="cb7-26"><a href="#cb7-26"></a>        udh_df[b,<span class="kw">c</span>(<span class="st">&quot;udh.long&quot;</span>, <span class="st">&quot;udh.lat&quot;</span>)], )</span>
+<span id="cb7-27"><a href="#cb7-27"></a>    }</span>
+<span id="cb7-28"><a href="#cb7-28"></a>    <span class="co"># index of minimal distance </span></span>
+<span id="cb7-29"><a href="#cb7-29"></a>    coordinates_uniques[i,]<span class="op">$</span>nn_index &lt;-<span class="st"> </span><span class="kw">which.min</span>(emptyvec)</span>
+<span id="cb7-30"><a href="#cb7-30"></a>    <span class="co"># the minimal distance itself</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>    coordinates_uniques[i,]<span class="op">$</span>nn_dist &lt;-<span class="st"> </span><span class="kw">min</span>(emptyvec)</span>
+<span id="cb7-32"><a href="#cb7-32"></a>  }</span>
+<span id="cb7-33"><a href="#cb7-33"></a>  <span class="co"># Get reid of centroid_lat, -long, to avoid duiplicates in merge back </span></span>
+<span id="cb7-34"><a href="#cb7-34"></a>  coordinates_uniques &lt;-<span class="st"> </span>coordinates_uniques <span class="op">%&gt;%</span></span>
+<span id="cb7-35"><a href="#cb7-35"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>centroid_lat,</span>
+<span id="cb7-36"><a href="#cb7-36"></a>           <span class="op">-</span>centroid_long)</span>
+<span id="cb7-37"><a href="#cb7-37"></a>  <span class="co"># Merge duplicate coordiantes back to data</span></span>
+<span id="cb7-38"><a href="#cb7-38"></a>  merged_back &lt;-<span class="st"> </span><span class="kw">merge</span>(internal_data,</span>
+<span id="cb7-39"><a href="#cb7-39"></a>                       coordinates_uniques,</span>
+<span id="cb7-40"><a href="#cb7-40"></a>                       <span class="dt">by.x =</span> <span class="st">&quot;coordinate_id&quot;</span>,</span>
+<span id="cb7-41"><a href="#cb7-41"></a>                       <span class="dt">by.y =</span> <span class="st">&quot;coordinate_id&quot;</span>,</span>
+<span id="cb7-42"><a href="#cb7-42"></a>                       <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb7-43"><a href="#cb7-43"></a>  <span class="co"># Merge census data based on inices</span></span>
+<span id="cb7-44"><a href="#cb7-44"></a>  merged_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(merged_back, </span>
+<span id="cb7-45"><a href="#cb7-45"></a>                    udh_df,</span>
+<span id="cb7-46"><a href="#cb7-46"></a>                    <span class="dt">by.x =</span> <span class="st">&quot;nn_index&quot;</span>,</span>
+<span id="cb7-47"><a href="#cb7-47"></a>                    <span class="dt">by.y =</span> <span class="st">&quot;X&quot;</span>,</span>
+<span id="cb7-48"><a href="#cb7-48"></a>                    <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb7-49"><a href="#cb7-49"></a>  <span class="co"># Coordinate ID no longer needed</span></span>
+<span id="cb7-50"><a href="#cb7-50"></a>  merged_<span class="dv">2</span> &lt;-<span class="st"> </span>merged_<span class="dv">2</span> <span class="op">%&gt;%</span></span>
+<span id="cb7-51"><a href="#cb7-51"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>coordinate_id)</span>
+<span id="cb7-52"><a href="#cb7-52"></a>  </span>
+<span id="cb7-53"><a href="#cb7-53"></a>  <span class="kw">return</span>(merged_<span class="dv">2</span>)</span>
+<span id="cb7-54"><a href="#cb7-54"></a>}</span></code></pre></div>
 </div>
 <div id="define-municipalities-per-metro-area" class="section level1">
-<h1><strong>Define municipalities per metro area</strong></h1>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Region: North</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="co"># State: Para (pa)</span></span>
-<span id="cb20-3"><a href="#cb20-3"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb20-4"><a href="#cb20-4"></a>  <span class="st">&quot;ANANINDEUA&quot;</span>,</span>
-<span id="cb20-5"><a href="#cb20-5"></a>  <span class="st">&quot;BELÉM&quot;</span>,</span>
-<span id="cb20-6"><a href="#cb20-6"></a>  <span class="st">&quot;BENEVIDES&quot;</span>,</span>
-<span id="cb20-7"><a href="#cb20-7"></a>  <span class="st">&quot;CASTANHAL&quot;</span>,</span>
-<span id="cb20-8"><a href="#cb20-8"></a>  <span class="st">&quot;MARITUBA&quot;</span>,</span>
-<span id="cb20-9"><a href="#cb20-9"></a>  <span class="st">&quot;SANTA BÁRBARA DO PARÁ&quot;</span>,</span>
-<span id="cb20-10"><a href="#cb20-10"></a>  <span class="st">&quot;SANTA IZABEL DO PARÁ&quot;</span>)</span>
-<span id="cb20-11"><a href="#cb20-11"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">stri_trans_general</span>(belem_metro_municips, <span class="st">&quot;Latin-ASCII&quot;</span>)</span>
-<span id="cb20-12"><a href="#cb20-12"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">tolower</span>(belem_metro_municips)</span>
-<span id="cb20-13"><a href="#cb20-13"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">paste</span>(belem_metro_municips, <span class="st">&quot;(pa)&quot;</span>)</span></code></pre></div>
+<h1><strong>3. Define municipalities per metro area</strong></h1>
+<p>This previous part was just about defining functions. In the next parts, we’ll start calling those functions. However, we must first take a step back. The very first step is to identify whether a case in the internal data set (Olist) is located in 1 of the 21 metropolitan areas of Brazil or not.</p>
+<p>This is done by building a big list of municipality names that are indicated to be located within a metropolitan area. The chunck below shows how this was done for one metropolitan area. I wanted to spare you the ~ 800+ lines of codes for all the other ones. It’s simply copy-pasting the municipality names for a given metropolitan area (found on SIDRA.gov.br), making a slight moderation to their format to integrate with the internal data set (Olist), and subsequently creating a huge list of municipality names that can be used to filter through (next code chunk).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Region: North</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co"># State: Para (pa)</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="st">&quot;ANANINDEUA&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="st">&quot;BELÉM&quot;</span>,</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="st">&quot;BENEVIDES&quot;</span>,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="st">&quot;CASTANHAL&quot;</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="st">&quot;MARITUBA&quot;</span>,</span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="st">&quot;SANTA BÁRBARA DO PARÁ&quot;</span>,</span>
+<span id="cb8-10"><a href="#cb8-10"></a>  <span class="st">&quot;SANTA IZABEL DO PARÁ&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">stri_trans_general</span>(belem_metro_municips, <span class="st">&quot;Latin-ASCII&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">tolower</span>(belem_metro_municips)</span>
+<span id="cb8-13"><a href="#cb8-13"></a>belem_metro_municips &lt;-<span class="st"> </span><span class="kw">paste</span>(belem_metro_municips, <span class="st">&quot;(pa)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># all together</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>all_udh_municips &lt;-<span class="st"> </span>baixada_santista_metro_municips</span>
+<span id="cb9-3"><a href="#cb9-3"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, belem_metro_municips)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, belo_horizonte_metro_municips)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, brasilia_metro_municips)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, campinas_metro_municips)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, curitiba_metro_municips)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, florianopolis_metro_municips)</span>
+<span id="cb9-9"><a href="#cb9-9"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, fortaleza_metro_municips)</span>
+<span id="cb9-10"><a href="#cb9-10"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, goiania_metro_municips)</span>
+<span id="cb9-11"><a href="#cb9-11"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, grande_vitoria_metro_municips)</span>
+<span id="cb9-12"><a href="#cb9-12"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, litoral_norte_metro_municips)</span>
+<span id="cb9-13"><a href="#cb9-13"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, maceio_metro_municips)</span>
+<span id="cb9-14"><a href="#cb9-14"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, manaus_metro_municips)</span>
+<span id="cb9-15"><a href="#cb9-15"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, natal_metro_municips)</span>
+<span id="cb9-16"><a href="#cb9-16"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, petrolina_juazeiro_metro_municips)</span>
+<span id="cb9-17"><a href="#cb9-17"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, porto_alegre_metro_municips)</span>
+<span id="cb9-18"><a href="#cb9-18"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, recife_metro_municips)</span>
+<span id="cb9-19"><a href="#cb9-19"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, rio_dj_metro_municips)</span>
+<span id="cb9-20"><a href="#cb9-20"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, salvador_metro_municips)</span>
+<span id="cb9-21"><a href="#cb9-21"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, sao_luis_metro_municips)</span>
+<span id="cb9-22"><a href="#cb9-22"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, sao_paulo_metro_municips)</span>
+<span id="cb9-23"><a href="#cb9-23"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, sorocaba_metro_municips)</span>
+<span id="cb9-24"><a href="#cb9-24"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, teresina_metro_municips)</span>
+<span id="cb9-25"><a href="#cb9-25"></a>all_udh_municips &lt;-<span class="st"> </span><span class="kw">append</span>(all_udh_municips, vale_do_rio_cuiaba_metro_municips)</span></code></pre></div>
+<p>This code chuck simply loads the external data sets (census) for all of the metropolitan regions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># external data | udh (neighborhood) level, by metropolitan region</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>sp_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/sao_paulo_udh.xlsx&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>fortaleza_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/fortaleza_udh.xlsx&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a>recife_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/recife_udh.xlsx&quot;</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>rio_dj_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/rio_dj_udh.xlsx&quot;</span>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a>salvador_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/salvador_udh.xlsx&quot;</span>)</span>
+<span id="cb10-7"><a href="#cb10-7"></a>porto_alegre_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/porto_alegre_udh.xlsx&quot;</span>)</span>
+<span id="cb10-8"><a href="#cb10-8"></a>natal_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/natal_udh.xlsx&quot;</span>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a>maceio_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/maceio_udh.xlsx&quot;</span>)</span>
+<span id="cb10-10"><a href="#cb10-10"></a>belo_horizonte_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/belo_horizonte_udh.xlsx&quot;</span>)</span>
+<span id="cb10-11"><a href="#cb10-11"></a>campinas_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/campinas_udh.xlsx&quot;</span>)</span>
+<span id="cb10-12"><a href="#cb10-12"></a>curitiba_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/curitiba_udh.xlsx&quot;</span>)</span>
+<span id="cb10-13"><a href="#cb10-13"></a>belem_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/belem_udh.xlsx&quot;</span>)</span>
+<span id="cb10-14"><a href="#cb10-14"></a>goiania_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/goiania_udh.xlsx&quot;</span>)</span>
+<span id="cb10-15"><a href="#cb10-15"></a>grande_vitoria_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/grande vitoria_udh.xlsx&quot;</span>)</span>
+<span id="cb10-16"><a href="#cb10-16"></a>florianopolis_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/florianopolis_udh.xlsx&quot;</span>)</span>
+<span id="cb10-17"><a href="#cb10-17"></a>manaus_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/manaus_udh.xlsx&quot;</span>)</span>
+<span id="cb10-18"><a href="#cb10-18"></a>sao_luis_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/sao_luis_udh.xlsx&quot;</span>)</span>
+<span id="cb10-19"><a href="#cb10-19"></a>sorocaba_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/sorocaba_udh.xlsx&quot;</span>)</span>
+<span id="cb10-20"><a href="#cb10-20"></a>baixada_santista_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/baixada_santista_udh.xlsx&quot;</span>)</span>
+<span id="cb10-21"><a href="#cb10-21"></a>brasilia_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/brasilia_udh.xlsx&quot;</span>)</span>
+<span id="cb10-22"><a href="#cb10-22"></a>teresina_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/teresina_udh.xlsx&quot;</span>)</span>
+<span id="cb10-23"><a href="#cb10-23"></a>petrolina_juazeiro_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/petrolina_juazeiro_udh.xlsx&quot;</span>)</span>
+<span id="cb10-24"><a href="#cb10-24"></a>vale_do_rio_cuiaba_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/vale_do_rio_cuiaba_udh.xlsx&quot;</span>)</span>
+<span id="cb10-25"><a href="#cb10-25"></a>vale_do_paraiba_e_litoral_norte_udh &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/vale_do_paraiba_e_litoral_norte_udh.xlsx&quot;</span>)</span></code></pre></div>
+<p>Preparing data sets for querying to get coordinates using the function <code>column_fixer()</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>sp_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(sp_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>fortaleza_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(fortaleza_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>recife_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(recife_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>rio_dj_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(rio_dj_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a>salvador_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(salvador_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>porto_alegre_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(porto_alegre_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>natal_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(natal_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-8"><a href="#cb11-8"></a>maceio_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(maceio_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-9"><a href="#cb11-9"></a>belo_horizonte_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(belo_horizonte_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-10"><a href="#cb11-10"></a>campinas_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(campinas_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-11"><a href="#cb11-11"></a>curitiba_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(curitiba_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-12"><a href="#cb11-12"></a>belem_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(belem_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-13"><a href="#cb11-13"></a>goiania_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(goiania_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-14"><a href="#cb11-14"></a>grande_vitoria_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(grande_vitoria_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-15"><a href="#cb11-15"></a>florianopolis_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(florianopolis_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-16"><a href="#cb11-16"></a>manaus_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(manaus_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-17"><a href="#cb11-17"></a>sao_luis_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(sao_luis_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-18"><a href="#cb11-18"></a>sorocaba_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(sorocaba_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-19"><a href="#cb11-19"></a>baixada_santista_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(baixada_santista_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-20"><a href="#cb11-20"></a>brasilia_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(brasilia_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-21"><a href="#cb11-21"></a>teresina_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(teresina_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-22"><a href="#cb11-22"></a>petrolina_juazeiro_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(petrolina_juazeiro_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-23"><a href="#cb11-23"></a>vale_do_rio_cuiaba_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(vale_do_rio_cuiaba_udh, <span class="st">&quot;udh&quot;</span>)</span>
+<span id="cb11-24"><a href="#cb11-24"></a>vale_do_paraiba_e_litoral_norte_udh &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(vale_do_paraiba_e_litoral_norte_udh, <span class="st">&quot;udh&quot;</span>)</span></code></pre></div>
+<p>Call function <code>coordinate_retriever()</code> with the external data sets (census) to get coordinates.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>sp_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(sp_udh, <span class="st">&quot;sao paulo&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a>fortaleza_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(fortaleza_udh, <span class="st">&quot;fortaleza&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a>recife_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(recife_udh, <span class="st">&quot;recife&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a>rio_dj_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(rio_dj_udh, <span class="st">&quot;rio de janeiro&quot;</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>salvador_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(salvador_udh, <span class="st">&quot;salvador&quot;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>porto_alegre_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(porto_alegre_udh, <span class="st">&quot;porto alegre&quot;</span>)</span>
+<span id="cb12-7"><a href="#cb12-7"></a>natal_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(natal_udh, <span class="st">&quot;natal&quot;</span>)</span>
+<span id="cb12-8"><a href="#cb12-8"></a>maceio_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(maceio_udh, <span class="st">&quot;maceio&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9"></a>belo_horizonte_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(belo_horizonte_udh, <span class="st">&quot;belo horizonte&quot;</span>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a>campinas_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(campinas_udh, <span class="st">&quot;campinas&quot;</span>)</span>
+<span id="cb12-11"><a href="#cb12-11"></a>curitiba_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(curitiba_udh, <span class="st">&quot;curitiba&quot;</span>)</span>
+<span id="cb12-12"><a href="#cb12-12"></a>belem_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(belem_udh, <span class="st">&quot;belem&quot;</span>)</span>
+<span id="cb12-13"><a href="#cb12-13"></a>goiania_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(goiania_udh, <span class="st">&quot;goiania&quot;</span>)</span>
+<span id="cb12-14"><a href="#cb12-14"></a>grande_vitoria_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(grande_vitoria_udh, <span class="st">&quot;vitoria&quot;</span>)</span>
+<span id="cb12-15"><a href="#cb12-15"></a>florianopolis_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(florianopolis_udh, <span class="st">&quot;florianopolis&quot;</span>)</span>
+<span id="cb12-16"><a href="#cb12-16"></a>manaus_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(manaus_udh, <span class="st">&quot;manaus&quot;</span>)</span>
+<span id="cb12-17"><a href="#cb12-17"></a>sao_luis_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(sao_luis_udh, <span class="st">&quot;sao luis&quot;</span>)</span>
+<span id="cb12-18"><a href="#cb12-18"></a>sorocaba_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(sorocaba_udh, <span class="st">&quot;sorocaba&quot;</span>)</span>
+<span id="cb12-19"><a href="#cb12-19"></a>baixada_santista_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(baixada_santista_udh, <span class="st">&quot;baixada santista&quot;</span>)</span>
+<span id="cb12-20"><a href="#cb12-20"></a>brasilia_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(brasilia_udh, <span class="st">&quot;distrito federal&quot;</span>)</span>
+<span id="cb12-21"><a href="#cb12-21"></a>teresina_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(teresina_udh, <span class="st">&quot;teresina&quot;</span>)</span>
+<span id="cb12-22"><a href="#cb12-22"></a>petrolina_juazeiro_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(petrolina_juazeiro_udh, <span class="st">&quot;petrolina juazeiro&quot;</span>)</span>
+<span id="cb12-23"><a href="#cb12-23"></a>vale_do_rio_cuiaba_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(vale_do_rio_cuiaba_udh, <span class="st">&quot;mato grosso&quot;</span>)</span>
+<span id="cb12-24"><a href="#cb12-24"></a>vale_do_paraiba_e_litoral_norte_udh &lt;-<span class="st"> </span><span class="kw">coordinate_retriever</span>(vale_do_paraiba_e_litoral_norte_udh, <span class="st">&quot;litoral norte&quot;</span>)</span></code></pre></div>
+<p>A backup never hurts.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># write as csv to avoid doing things over and over again</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="kw">write.csv</span>(sp_udh, <span class="st">&quot;./udh_queried_data/sao_paulo_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">write.csv</span>(fortaleza_udh, <span class="st">&quot;./udh_queried_data/fortaleza_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="kw">write.csv</span>(recife_udh, <span class="st">&quot;./udh_queried_data/recife_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="kw">write.csv</span>(rio_dj_udh, <span class="st">&quot;./udh_queried_data/rio_dj_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">write.csv</span>(salvador_udh, <span class="st">&quot;./udh_queried_data/salvador_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="kw">write.csv</span>(porto_alegre_udh, <span class="st">&quot;./udh_queried_data/porto_alegre_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="kw">write.csv</span>(natal_udh, <span class="st">&quot;./udh_queried_data/natal_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="kw">write.csv</span>(maceio_udh, <span class="st">&quot;./udh_queried_data/maceio_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="kw">write.csv</span>(belo_horizonte_udh, <span class="st">&quot;./udh_queried_data/belo_horizonte_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="kw">write.csv</span>(campinas_udh, <span class="st">&quot;./udh_queried_data/campinas_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="kw">write.csv</span>(curitiba_udh, <span class="st">&quot;./udh_queried_data/curtiba_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="kw">write.csv</span>(belem_udh, <span class="st">&quot;./udh_queried_data/belem_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-14"><a href="#cb13-14"></a><span class="kw">write.csv</span>(goiania_udh, <span class="st">&quot;./udh_queried_data/goiania_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="kw">write.csv</span>(grande_vitoria_udh, <span class="st">&quot;./udh_queried_data/grande_vitoria_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="kw">write.csv</span>(florianopolis_udh, <span class="st">&quot;./udh_queried_data/florianopolis_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="kw">write.csv</span>(manaus_udh, <span class="st">&quot;./udh_queried_data/manaus_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-18"><a href="#cb13-18"></a><span class="kw">write.csv</span>(sao_luis_udh, <span class="st">&quot;./udh_queried_data/sao_luis_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-19"><a href="#cb13-19"></a><span class="kw">write.csv</span>(sorocaba_udh, <span class="st">&quot;./udh_queried_data/sorocaba_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-20"><a href="#cb13-20"></a><span class="kw">write.csv</span>(baixada_santista_udh, <span class="st">&quot;./udh_queried_data/baixada_santista_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-21"><a href="#cb13-21"></a><span class="kw">write.csv</span>(brasilia_udh, <span class="st">&quot;./udh_queried_data/brasilia_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-22"><a href="#cb13-22"></a><span class="kw">write.csv</span>(teresina_udh, <span class="st">&quot;./udh_queried_data/teresina_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-23"><a href="#cb13-23"></a><span class="kw">write.csv</span>(petrolina_juazeiro_udh, <span class="st">&quot;./udh_queried_data/petrolina_juazeiro_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-24"><a href="#cb13-24"></a><span class="kw">write.csv</span>(vale_do_rio_cuiaba_udh, <span class="st">&quot;./udh_queried_data/vale_do_rio_cuiaba_udh_queried.csv&quot;</span>)</span>
+<span id="cb13-25"><a href="#cb13-25"></a><span class="kw">write.csv</span>(vale_do_paraiba_e_litoral_norte_udh, <span class="st">&quot;./udh_queried_data/vale_do_paraiba_e_litoral_norte_udh_queried.csv&quot;</span>)</span></code></pre></div>
+</div>
+<div id="joining-the-internal-olist-and-external-census-data-sets" class="section level1">
+<h1><strong>4. Joining the internal (Olist) and external (census) data sets</strong></h1>
+<div id="non-metropolitan-areas" class="section level2">
+<h2><strong>4.1. Non-metropolitan areas</strong></h2>
+<p>As explained in the introduction, all cases in non-metro areas can simply be joined based on name with the external data set (census). In the internal data set (Olist), the column of interest is <code>customer_city</code>, which is somewhat of a counter intuitive name because it almost fully consists of municipality names.</p>
+<p>Firstly, the names are transformed into a specific format to ensure that the join with external (census) will run successfully.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># standardize &quot;customer_city&quot; to join municipality level smoothly</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>brazil_df &lt;-<span class="st"> </span>brazil_df <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">customer_city =</span> <span class="kw">paste</span>(customer_city, <span class="st">&quot;(&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot; &quot;</span>),</span>
+<span id="cb14-4"><a href="#cb14-4"></a>         <span class="dt">customer_city =</span> <span class="kw">paste</span>(customer_city, customer_state, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb14-5"><a href="#cb14-5"></a>         <span class="dt">customer_city =</span> <span class="kw">paste</span>(customer_city, <span class="st">&quot;)&quot;</span>, <span class="dt">sep=</span><span class="st">&quot;&quot;</span>),</span>
+<span id="cb14-6"><a href="#cb14-6"></a>         </span>
+<span id="cb14-7"><a href="#cb14-7"></a>         <span class="co"># already done beforehand but do it again just to be certain</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a>         <span class="dt">customer_city =</span> <span class="kw">tolower</span>(customer_city),</span>
+<span id="cb14-9"><a href="#cb14-9"></a>         <span class="dt">customer_city =</span> <span class="kw">iconv</span>(customer_city, <span class="dt">to =</span> <span class="st">&quot;ASCII//TRANSLIT&quot;</span>)</span>
+<span id="cb14-10"><a href="#cb14-10"></a>        )</span></code></pre></div>
+<p>Some (few) in “customer_city” are actual customer cities instead of municipalities so I searched the corresponding municipality names to these cities and saved it in an excel file. This was merged with the internal data set (Olist) to swap these city names with municipality names.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>keys &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;dffort.xlsx&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>keys &lt;-<span class="st"> </span>keys <span class="op">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new_names =</span> <span class="kw">as.character</span>(new_names),</span>
+<span id="cb15-5"><a href="#cb15-5"></a>         <span class="dt">new_names =</span> <span class="kw">iconv</span>(new_names, <span class="dt">to =</span> <span class="st">&quot;ASCII//TRANSLIT&quot;</span>),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>         <span class="dt">new_names =</span> <span class="kw">tolower</span>(new_names)) <span class="op">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="st"> </span>nummie)</span>
+<span id="cb15-8"><a href="#cb15-8"></a>keys &lt;-<span class="st"> </span>keys[<span class="op">!</span><span class="kw">duplicated</span>(keys<span class="op">$</span>new_names),]</span>
+<span id="cb15-9"><a href="#cb15-9"></a>brazil_df &lt;-<span class="st"> </span><span class="kw">merge</span>(brazil_df,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>                keys,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>                <span class="dt">by.x =</span> <span class="st">&quot;customer_city&quot;</span>,</span>
+<span id="cb15-12"><a href="#cb15-12"></a>                <span class="dt">by.y =</span> <span class="st">&quot;old_names&quot;</span>,</span>
+<span id="cb15-13"><a href="#cb15-13"></a>                <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb15-14"><a href="#cb15-14"></a>brazil_df &lt;-<span class="st"> </span>brazil_df <span class="op">%&gt;%</span></span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">customer_city =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_names) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, customer_city, new_names)) <span class="op">%&gt;%</span></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="st"> </span>new_names)</span></code></pre></div>
+<p>Remember the list we created beforehand with names of municipalities that are officially part of a metropolitan area? Well we are now finally going to use it to seperate the non-metropolitan cases.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Get all cases that are NOT in the list of metro-municipalities</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>non_metros_<span class="dv">1</span> &lt;-<span class="st"> </span>brazil_df <span class="op">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>customer_city <span class="op">%in%</span><span class="st"> </span>all_udh_municips)</span></code></pre></div>
+<p>Next, it’s time to read in the municipality-level (so non-metropolitan cases only) external data and prepare it for the merge. Notice that “municip” is used as an argument for the function <code>column_fixer()</code>. This is to ensure that any column of the external data set (census) will be indicated with a sort of domain name “mun.”. so for instance, the column “População.total.2010” will be turned into “mun.População.total.2010”. This is done to ensure that, when both subsets are combined again, I always know whether data refers to municipality-level or neighborhood-level aggregation. It doesn’t really have a practical purpose other than giving me some clarity.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Read municipal level 2010 census data</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>brazil_municip &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;./atlas_data/brazil_municipal.xlsx&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a>brazil_municip &lt;-<span class="st"> </span><span class="kw">column_fixer</span>(brazil_municip, <span class="st">&quot;municip&quot;</span>)</span></code></pre></div>
+<p>Later down the road, we will bind non-metropolitan subset with the metropolitan subset. To do so successfully, the columns of both data sets should be identical. All metro-politan area data will be indicated with “udh.” so we’ll now just create a bunch of empty columns for that.</p>
+<p>As an outsider, I can imagine it seems a little weird, but for me it helped to retain a clear overview of what was going on.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Add columns to ensure coumns are the same for rbind</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>non_metros_<span class="dv">1</span> &lt;-<span class="st"> </span>non_metros_<span class="dv">1</span> <span class="op">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="st"> </span>index) <span class="op">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    <span class="dt">dist =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>    <span class="dt">udh.Territorialidades =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-7"><a href="#cb18-7"></a>    udh.Populaçã<span class="dt">o.total.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-8"><a href="#cb18-8"></a>    udh.Populaçã<span class="dt">o.rural.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-9"><a href="#cb18-9"></a>    udh.Populaçã<span class="dt">o.urbana.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-10"><a href="#cb18-10"></a>    <span class="dt">udh.IDHM.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-11"><a href="#cb18-11"></a>    udh.IDHM.Educaçã<span class="dt">o.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-12"><a href="#cb18-12"></a>    <span class="dt">udh.Taxa.de.analfabetismo...25.anos.ou.mais.de.idade.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-13"><a href="#cb18-13"></a>    <span class="dt">udh.Taxa.de.analfabetismo...18.anos.ou.mais.de.idade.2010 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-14"><a href="#cb18-14"></a>    <span class="dt">udh.urbanity =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-15"><a href="#cb18-15"></a>    <span class="dt">udh.rurality =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-16"><a href="#cb18-16"></a>    <span class="dt">udh.cumul_age_24 =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-17"><a href="#cb18-17"></a>    <span class="dt">udh.young_ratio =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-18"><a href="#cb18-18"></a>    <span class="dt">udh.lat =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-19"><a href="#cb18-19"></a>    <span class="dt">udh.long =</span> <span class="ot">NA</span>,</span>
+<span id="cb18-20"><a href="#cb18-20"></a>    <span class="dt">metro =</span> <span class="ot">NA</span></span>
+<span id="cb18-21"><a href="#cb18-21"></a>  )</span></code></pre></div>
+<p>Finally, we merge internal and external municipality-level data on municipality name</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>non_metros_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">merge</span>(non_metros_<span class="dv">1</span>,</span>
+<span id="cb19-2"><a href="#cb19-2"></a>                      brazil_municip,</span>
+<span id="cb19-3"><a href="#cb19-3"></a>                      <span class="dt">by.x =</span> <span class="st">&quot;customer_city&quot;</span>,</span>
+<span id="cb19-4"><a href="#cb19-4"></a>                      <span class="dt">by.y =</span> <span class="st">&quot;mc.Territorialidades&quot;</span>,</span>
+<span id="cb19-5"><a href="#cb19-5"></a>                      <span class="dt">all.x =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="metropolitan-areas" class="section level2">
+<h2><strong>4.2. Metropolitan areas</strong></h2>
+<p>For the metropolitan areas, we simply use the <code>udh_merge_ex_with_in</code> function for each metropolitan area. This will find link the internal data set (Olist) cases with external census data for the two closest points. Note that the “metro” column was added just to provide an indication of which metropolitan area the data is on.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>sao_paulo_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-2"><a href="#cb20-2"></a>                                             sp_udh, </span>
+<span id="cb20-3"><a href="#cb20-3"></a>                                             sao_paulo_metro_municips)</span>
+<span id="cb20-4"><a href="#cb20-4"></a>sao_paulo_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;sao_paulo&quot;</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>fortaleza_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-6"><a href="#cb20-6"></a>                                             fortaleza_udh, </span>
+<span id="cb20-7"><a href="#cb20-7"></a>                                             fortaleza_metro_municips)</span>
+<span id="cb20-8"><a href="#cb20-8"></a>fortaleza_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;fortaleza&quot;</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a>recife_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-10"><a href="#cb20-10"></a>                                          recife_udh, </span>
+<span id="cb20-11"><a href="#cb20-11"></a>                                          recife_metro_municips)</span>
+<span id="cb20-12"><a href="#cb20-12"></a>recife_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;recife&quot;</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a>rio_dj_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-14"><a href="#cb20-14"></a>                                          rio_dj_udh, </span>
+<span id="cb20-15"><a href="#cb20-15"></a>                                          rio_dj_metro_municips)</span>
+<span id="cb20-16"><a href="#cb20-16"></a>rio_dj_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;rio_de_janeiro&quot;</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a>salvador_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-18"><a href="#cb20-18"></a>                                            salvador_udh, </span>
+<span id="cb20-19"><a href="#cb20-19"></a>                                            salvador_metro_municips)</span>
+<span id="cb20-20"><a href="#cb20-20"></a>salvador_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;salvador&quot;</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a>porto_alegre_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-22"><a href="#cb20-22"></a>                                                porto_alegre_udh, </span>
+<span id="cb20-23"><a href="#cb20-23"></a>                                                porto_alegre_metro_municips)</span>
+<span id="cb20-24"><a href="#cb20-24"></a>porto_alegre_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;porto_alegre&quot;</span></span>
+<span id="cb20-25"><a href="#cb20-25"></a>natal_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-26"><a href="#cb20-26"></a>                                         natal_udh, </span>
+<span id="cb20-27"><a href="#cb20-27"></a>                                         natal_metro_municips)</span>
+<span id="cb20-28"><a href="#cb20-28"></a>natal_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;natal&quot;</span></span>
+<span id="cb20-29"><a href="#cb20-29"></a>maceio_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-30"><a href="#cb20-30"></a>                                          maceio_udh, </span>
+<span id="cb20-31"><a href="#cb20-31"></a>                                          maceio_metro_municips)</span>
+<span id="cb20-32"><a href="#cb20-32"></a>maceio_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;maceio&quot;</span></span>
+<span id="cb20-33"><a href="#cb20-33"></a>belo_horizonte_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-34"><a href="#cb20-34"></a>                                                  belo_horizonte_udh, </span>
+<span id="cb20-35"><a href="#cb20-35"></a>                                                  belo_horizonte_metro_municips)</span>
+<span id="cb20-36"><a href="#cb20-36"></a>belo_horizonte_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;belo_horizonte&quot;</span></span>
+<span id="cb20-37"><a href="#cb20-37"></a>campinas_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-38"><a href="#cb20-38"></a>                                            campinas_udh, </span>
+<span id="cb20-39"><a href="#cb20-39"></a>                                            campinas_metro_municips)</span>
+<span id="cb20-40"><a href="#cb20-40"></a>campinas_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;campinas&quot;</span></span>
+<span id="cb20-41"><a href="#cb20-41"></a>curitiba_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-42"><a href="#cb20-42"></a>                                            curitiba_udh, </span>
+<span id="cb20-43"><a href="#cb20-43"></a>                                            curitiba_metro_municips)</span>
+<span id="cb20-44"><a href="#cb20-44"></a>curitiba_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;curitiba&quot;</span></span>
+<span id="cb20-45"><a href="#cb20-45"></a>belem_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-46"><a href="#cb20-46"></a>                                         belem_udh, </span>
+<span id="cb20-47"><a href="#cb20-47"></a>                                         belem_metro_municips)</span>
+<span id="cb20-48"><a href="#cb20-48"></a>belem_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;belem&quot;</span></span>
+<span id="cb20-49"><a href="#cb20-49"></a>goiania_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-50"><a href="#cb20-50"></a>                                           goiania_udh, </span>
+<span id="cb20-51"><a href="#cb20-51"></a>                                           goiania_metro_municips)</span>
+<span id="cb20-52"><a href="#cb20-52"></a>goiania_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;goiania&quot;</span></span>
+<span id="cb20-53"><a href="#cb20-53"></a>grande_vitoria_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-54"><a href="#cb20-54"></a>                                                  grande_vitoria_udh, </span>
+<span id="cb20-55"><a href="#cb20-55"></a>                                                  grande_vitoria_metro_municips)</span>
+<span id="cb20-56"><a href="#cb20-56"></a>grande_vitoria_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;grande_vitoria&quot;</span></span>
+<span id="cb20-57"><a href="#cb20-57"></a>florianopolis_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-58"><a href="#cb20-58"></a>                                                 florianopolis_udh, </span>
+<span id="cb20-59"><a href="#cb20-59"></a>                                                 florianopolis_metro_municips)</span>
+<span id="cb20-60"><a href="#cb20-60"></a>florianopolis_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;florianopolis&quot;</span></span>
+<span id="cb20-61"><a href="#cb20-61"></a>manaus_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-62"><a href="#cb20-62"></a>                                          manaus_udh, </span>
+<span id="cb20-63"><a href="#cb20-63"></a>                                          manaus_metro_municips)</span>
+<span id="cb20-64"><a href="#cb20-64"></a>manaus_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;manaus&quot;</span></span>
+<span id="cb20-65"><a href="#cb20-65"></a>sao_luis_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-66"><a href="#cb20-66"></a>                                            sao_luis_udh, </span>
+<span id="cb20-67"><a href="#cb20-67"></a>                                            sao_luis_metro_municips)</span>
+<span id="cb20-68"><a href="#cb20-68"></a>sao_luis_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;sao_luis&quot;</span></span>
+<span id="cb20-69"><a href="#cb20-69"></a>sorocaba_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-70"><a href="#cb20-70"></a>                                            sorocaba_udh, </span>
+<span id="cb20-71"><a href="#cb20-71"></a>                                            sorocaba_metro_municips)</span>
+<span id="cb20-72"><a href="#cb20-72"></a>sorocaba_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;sorocaba&quot;</span></span>
+<span id="cb20-73"><a href="#cb20-73"></a>baixada_santista_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-74"><a href="#cb20-74"></a>                                                    baixada_santista_udh, </span>
+<span id="cb20-75"><a href="#cb20-75"></a>                                                    baixada_santista_metro_municips)</span>
+<span id="cb20-76"><a href="#cb20-76"></a>baixada_santista_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;baixada_santista&quot;</span></span>
+<span id="cb20-77"><a href="#cb20-77"></a>brasilia_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-78"><a href="#cb20-78"></a>                                            brasilia_udh, </span>
+<span id="cb20-79"><a href="#cb20-79"></a>                                            brasilia_metro_municips) </span>
+<span id="cb20-80"><a href="#cb20-80"></a>brasilia_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;brasilia&quot;</span></span>
+<span id="cb20-81"><a href="#cb20-81"></a>teresina_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-82"><a href="#cb20-82"></a>                                            teresina_udh, </span>
+<span id="cb20-83"><a href="#cb20-83"></a>                                            teresina_metro_municips)</span>
+<span id="cb20-84"><a href="#cb20-84"></a>teresina_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;teresina&quot;</span></span>
+<span id="cb20-85"><a href="#cb20-85"></a>petrolina_juazeiro_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-86"><a href="#cb20-86"></a>                                                      petrolina_juazeiro_udh, </span>
+<span id="cb20-87"><a href="#cb20-87"></a>                                                      petrolina_juazeiro_metro_municips )</span>
+<span id="cb20-88"><a href="#cb20-88"></a>petrolina_juazeiro_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;petrolina_juazeiro&quot;</span></span>
+<span id="cb20-89"><a href="#cb20-89"></a>vale_do_rio_cuiaba_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-90"><a href="#cb20-90"></a>                                                      vale_do_rio_cuiaba_udh, </span>
+<span id="cb20-91"><a href="#cb20-91"></a>                                                      vale_do_rio_cuiaba_metro_municips)</span>
+<span id="cb20-92"><a href="#cb20-92"></a>vale_do_rio_cuiaba_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;vale_do_rio_cuiaba&quot;</span></span>
+<span id="cb20-93"><a href="#cb20-93"></a>vale_do_paraiba_e_litoral_norte_udh_merged &lt;-<span class="st"> </span><span class="kw">udh_merge_ex_with_in</span>(brazil_df, </span>
+<span id="cb20-94"><a href="#cb20-94"></a>                                                                   vale_do_paraiba_e_litoral_norte_udh,</span>
+<span id="cb20-95"><a href="#cb20-95"></a>                                                                   litoral_norte_metro_municips)</span>
+<span id="cb20-96"><a href="#cb20-96"></a>vale_do_paraiba_e_litoral_norte_udh_merged<span class="op">$</span>metro &lt;-<span class="st"> &quot;litoral_norte&quot;</span></span></code></pre></div>
+<p>Turn all seperate UDH data into 1 big metro datset.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(sao_paulo_udh_merged, fortaleza_udh_merged)</span>
+<span id="cb21-2"><a href="#cb21-2"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, recife_udh_merged)</span>
+<span id="cb21-3"><a href="#cb21-3"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, rio_dj_udh_merged)</span>
+<span id="cb21-4"><a href="#cb21-4"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, salvador_udh_merged)</span>
+<span id="cb21-5"><a href="#cb21-5"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, porto_alegre_udh_merged)</span>
+<span id="cb21-6"><a href="#cb21-6"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, natal_udh_merged)</span>
+<span id="cb21-7"><a href="#cb21-7"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, maceio_udh_merged)</span>
+<span id="cb21-8"><a href="#cb21-8"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, belo_horizonte_udh_merged)</span>
+<span id="cb21-9"><a href="#cb21-9"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, curitiba_udh_merged)</span>
+<span id="cb21-10"><a href="#cb21-10"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, belem_udh_merged)</span>
+<span id="cb21-11"><a href="#cb21-11"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, goiania_udh_merged)</span>
+<span id="cb21-12"><a href="#cb21-12"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, grande_vitoria_udh_merged)</span>
+<span id="cb21-13"><a href="#cb21-13"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, florianopolis_udh_merged)</span>
+<span id="cb21-14"><a href="#cb21-14"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, manaus_udh_merged)</span>
+<span id="cb21-15"><a href="#cb21-15"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, sao_luis_udh_merged)</span>
+<span id="cb21-16"><a href="#cb21-16"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, sorocaba_udh_merged)</span>
+<span id="cb21-17"><a href="#cb21-17"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, baixada_santista_udh_merged)</span>
+<span id="cb21-18"><a href="#cb21-18"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, brasilia_udh_merged)</span>
+<span id="cb21-19"><a href="#cb21-19"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, teresina_udh_merged)</span>
+<span id="cb21-20"><a href="#cb21-20"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, petrolina_juazeiro_udh_merged)</span>
+<span id="cb21-21"><a href="#cb21-21"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, vale_do_rio_cuiaba_udh_merged)</span>
+<span id="cb21-22"><a href="#cb21-22"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, vale_do_paraiba_e_litoral_norte_udh_merged)</span>
+<span id="cb21-23"><a href="#cb21-23"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>_euclidean, campinas_udh_merged)</span></code></pre></div>
+</div>
+</div>
+<div id="bind-together-the-municipality-level-data-and-the-metro-data" class="section level1">
+<h1><strong>5. Bind together the municipality-level data and the metro data</strong></h1>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Fix some names that went weird because Windows can&#39;t handle these characters</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>metros_<span class="dv">1</span>_euclidean &lt;-<span class="st"> </span>metros_<span class="dv">1</span>_euclidean <span class="op">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">rename</span>(udh.Populaçã<span class="dt">o.total.2010  =</span> udh.PopulaÃ.Ã.o.total<span class="fl">.2010</span>,</span>
+<span id="cb22-4"><a href="#cb22-4"></a>         udh.Populaçã<span class="dt">o.rural.2010  =</span> udh.PopulaÃ.Ã.o.rural<span class="fl">.2010</span>,</span>
+<span id="cb22-5"><a href="#cb22-5"></a>         udh.Populaçã<span class="dt">o.urbana.2010 =</span> udh.PopulaÃ.Ã.o.urbana<span class="fl">.2010</span>,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>         udh.IDHM.Educaçã<span class="dt">o.2010    =</span> udh.IDHM.EducaÃ.Ã.o<span class="fl">.2010</span>)</span>
+<span id="cb22-7"><a href="#cb22-7"></a></span>
+<span id="cb22-8"><a href="#cb22-8"></a><span class="co"># Sort out the precise columns to ensure a smooth rbind</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a>metros_<span class="dv">1</span> &lt;-<span class="st"> </span>metros_<span class="dv">1</span>_euclidean <span class="op">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10"></a><span class="st">  </span><span class="kw">select</span>(</span>
+<span id="cb22-11"><a href="#cb22-11"></a>    <span class="op">-</span><span class="st"> </span>index_other_data, </span>
+<span id="cb22-12"><a href="#cb22-12"></a>    <span class="op">-</span><span class="st"> </span>X,               </span>
+<span id="cb22-13"><a href="#cb22-13"></a>    <span class="op">-</span><span class="st"> </span>index,</span>
+<span id="cb22-14"><a href="#cb22-14"></a>    <span class="op">-</span><span class="st"> </span>local_index</span>
+<span id="cb22-15"><a href="#cb22-15"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb22-16"><a href="#cb22-16"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb22-17"><a href="#cb22-17"></a>    <span class="st">`</span><span class="dt">mc.População total 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-18"><a href="#cb22-18"></a>    <span class="st">`</span><span class="dt">mc.População rural 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-19"><a href="#cb22-19"></a>    <span class="st">`</span><span class="dt">mc.População urbana 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-20"><a href="#cb22-20"></a>    <span class="st">`</span><span class="dt">mc.IDHM 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-21"><a href="#cb22-21"></a>    <span class="st">`</span><span class="dt">mc.IDHM Educação 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-22"><a href="#cb22-22"></a>    <span class="st">`</span><span class="dt">mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-23"><a href="#cb22-23"></a>    <span class="st">`</span><span class="dt">mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010</span><span class="st">`</span> =<span class="st"> </span><span class="ot">NA</span>,</span>
+<span id="cb22-24"><a href="#cb22-24"></a>    <span class="dt">mc.urbanity =</span> <span class="ot">NA</span>,</span>
+<span id="cb22-25"><a href="#cb22-25"></a>    <span class="dt">mc.rurality =</span> <span class="ot">NA</span>,</span>
+<span id="cb22-26"><a href="#cb22-26"></a>    <span class="dt">mc.cumul_age_24 =</span> <span class="ot">NA</span>,</span>
+<span id="cb22-27"><a href="#cb22-27"></a>    <span class="dt">mc.young_ratio =</span> <span class="ot">NA</span></span>
+<span id="cb22-28"><a href="#cb22-28"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb22-29"><a href="#cb22-29"></a><span class="st">  </span><span class="kw">filter</span>(</span>
+<span id="cb22-30"><a href="#cb22-30"></a>    dist <span class="op">&lt;</span><span class="st"> </span><span class="dv">2</span> <span class="co"># to deal with extreme distances</span></span>
+<span id="cb22-31"><a href="#cb22-31"></a>  )</span>
+<span id="cb22-32"><a href="#cb22-32"></a></span>
+<span id="cb22-33"><a href="#cb22-33"></a><span class="co"># Put together both sides of the equation</span></span>
+<span id="cb22-34"><a href="#cb22-34"></a>binded_df &lt;-<span class="st"> </span><span class="kw">rbind</span>(metros_<span class="dv">1</span>, non_metros_<span class="dv">1</span>)</span>
+<span id="cb22-35"><a href="#cb22-35"></a></span>
+<span id="cb22-36"><a href="#cb22-36"></a><span class="co"># Take care of double NA rows.</span></span>
+<span id="cb22-37"><a href="#cb22-37"></a>binded_df &lt;-<span class="st"> </span><span class="kw">subset</span>(binded_df, <span class="co"># xor works because there are no overlaps on 1</span></span>
+<span id="cb22-38"><a href="#cb22-38"></a>                    <span class="kw">xor</span>(<span class="kw">is.na</span>(mc.young_ratio), </span>
+<span id="cb22-39"><a href="#cb22-39"></a>                        <span class="kw">is.na</span>(udh.long))) <span class="co"># implement </span></span></code></pre></div>
+</div>
+<div id="make-everything-neat-and-nice" class="section level1">
+<h1><strong>6. Make everything neat and nice</strong></h1>
+<p>Things are still a little messy, especially the namings of some columns. This part fixes that.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>binded_df &lt;-<span class="st"> </span>binded_df <span class="op">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="st">  </span><span class="co"># First fill with mc data</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">new_total_pop =</span> <span class="st">`</span><span class="dt">mc.População total 2010</span><span class="st">`</span>,</span>
+<span id="cb23-4"><a href="#cb23-4"></a>         <span class="dt">new_total_rural =</span> <span class="st">`</span><span class="dt">mc.População rural 2010</span><span class="st">`</span>,</span>
+<span id="cb23-5"><a href="#cb23-5"></a>         <span class="dt">new_total_urban =</span> <span class="st">`</span><span class="dt">mc.População urbana 2010</span><span class="st">`</span>,</span>
+<span id="cb23-6"><a href="#cb23-6"></a>         <span class="dt">new_idhm =</span> <span class="st">`</span><span class="dt">mc.IDHM 2010</span><span class="st">`</span>,</span>
+<span id="cb23-7"><a href="#cb23-7"></a>         <span class="dt">new_idhm_edu =</span> <span class="st">`</span><span class="dt">mc.IDHM Educação 2010</span><span class="st">`</span>,</span>
+<span id="cb23-8"><a href="#cb23-8"></a>         <span class="dt">new_anafal_25_oumais =</span> <span class="st">`</span><span class="dt">mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb23-9"><a href="#cb23-9"></a>         <span class="dt">new_anafal_18_oumais =</span> <span class="st">`</span><span class="dt">mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb23-10"><a href="#cb23-10"></a>         <span class="dt">new_urbanity =</span> mc.urbanity,</span>
+<span id="cb23-11"><a href="#cb23-11"></a>         <span class="dt">new_rurality =</span> mc.rurality,</span>
+<span id="cb23-12"><a href="#cb23-12"></a>         <span class="dt">new_cumul_age_24 =</span> mc.cumul_age_<span class="dv">24</span>,</span>
+<span id="cb23-13"><a href="#cb23-13"></a>         <span class="dt">new_young_ratio =</span> mc.young_ratio</span>
+<span id="cb23-14"><a href="#cb23-14"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a><span class="st">  </span><span class="co"># If na, fill up with the udh data</span></span>
+<span id="cb23-16"><a href="#cb23-16"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb23-17"><a href="#cb23-17"></a>    <span class="dt">new_total_pop =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_total_pop) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-18"><a href="#cb23-18"></a>                             udh.População.total<span class="fl">.2010</span>, </span>
+<span id="cb23-19"><a href="#cb23-19"></a>                             new_total_pop),</span>
+<span id="cb23-20"><a href="#cb23-20"></a>    <span class="dt">new_total_rural =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_total_rural) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-21"><a href="#cb23-21"></a>                             udh.População.rural<span class="fl">.2010</span>, </span>
+<span id="cb23-22"><a href="#cb23-22"></a>                             new_total_rural),</span>
+<span id="cb23-23"><a href="#cb23-23"></a>    <span class="dt">new_total_urban =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_total_urban) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-24"><a href="#cb23-24"></a>                             udh.População.urbana<span class="fl">.2010</span>, </span>
+<span id="cb23-25"><a href="#cb23-25"></a>                             new_total_urban),</span>
+<span id="cb23-26"><a href="#cb23-26"></a>    <span class="dt">new_idhm =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_idhm) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-27"><a href="#cb23-27"></a>                             udh.IDHM<span class="fl">.2010</span>, </span>
+<span id="cb23-28"><a href="#cb23-28"></a>                             new_idhm),</span>
+<span id="cb23-29"><a href="#cb23-29"></a>    <span class="dt">new_idhm_edu =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_idhm_edu) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-30"><a href="#cb23-30"></a>                             udh.IDHM.Educação<span class="fl">.2010</span>, </span>
+<span id="cb23-31"><a href="#cb23-31"></a>                             new_idhm_edu),</span>
+<span id="cb23-32"><a href="#cb23-32"></a>    <span class="dt">new_anafal_25_oumais =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_anafal_<span class="dv">25</span>_oumais) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-33"><a href="#cb23-33"></a>                             udh.Taxa.de.analfabetismo...<span class="fl">25.</span>anos.ou.mais.de.idade<span class="fl">.2010</span>,</span>
+<span id="cb23-34"><a href="#cb23-34"></a>                             new_anafal_<span class="dv">25</span>_oumais),</span>
+<span id="cb23-35"><a href="#cb23-35"></a>    <span class="dt">new_anafal_18_oumais =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_anafal_<span class="dv">18</span>_oumais) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-36"><a href="#cb23-36"></a>                             udh.Taxa.de.analfabetismo...<span class="fl">18.</span>anos.ou.mais.de.idade<span class="fl">.2010</span>, </span>
+<span id="cb23-37"><a href="#cb23-37"></a>                             new_anafal_<span class="dv">18</span>_oumais),</span>
+<span id="cb23-38"><a href="#cb23-38"></a>    <span class="dt">new_urbanity =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_urbanity) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-39"><a href="#cb23-39"></a>                             udh.urbanity, </span>
+<span id="cb23-40"><a href="#cb23-40"></a>                             new_urbanity),</span>
+<span id="cb23-41"><a href="#cb23-41"></a>    <span class="dt">new_rurality =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_rurality) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-42"><a href="#cb23-42"></a>                             udh.rurality, </span>
+<span id="cb23-43"><a href="#cb23-43"></a>                             new_rurality),</span>
+<span id="cb23-44"><a href="#cb23-44"></a>    <span class="dt">new_cumul_age_24 =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_cumul_age_<span class="dv">24</span>) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-45"><a href="#cb23-45"></a>                             udh.cumul_age_<span class="dv">24</span>, </span>
+<span id="cb23-46"><a href="#cb23-46"></a>                             new_cumul_age_<span class="dv">24</span>),</span>
+<span id="cb23-47"><a href="#cb23-47"></a>    <span class="dt">new_young_ratio =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(new_young_ratio) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, </span>
+<span id="cb23-48"><a href="#cb23-48"></a>                             udh.young_ratio, </span>
+<span id="cb23-49"><a href="#cb23-49"></a>                             new_young_ratio)</span>
+<span id="cb23-50"><a href="#cb23-50"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb23-51"><a href="#cb23-51"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb23-52"><a href="#cb23-52"></a>    <span class="dt">udh_indicator =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(udh.urbanity) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb23-53"><a href="#cb23-53"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb23-54"><a href="#cb23-54"></a><span class="st">  </span><span class="kw">select</span>(</span>
+<span id="cb23-55"><a href="#cb23-55"></a>    <span class="op">-</span><span class="st"> </span>udh.População.total<span class="fl">.2010</span>,</span>
+<span id="cb23-56"><a href="#cb23-56"></a>    <span class="op">-</span><span class="st"> </span>udh.População.rural<span class="fl">.2010</span>,</span>
+<span id="cb23-57"><a href="#cb23-57"></a>    <span class="op">-</span><span class="st"> </span>udh.População.urbana<span class="fl">.2010</span>,</span>
+<span id="cb23-58"><a href="#cb23-58"></a>    <span class="op">-</span><span class="st"> </span>udh.IDHM<span class="fl">.2010</span>,</span>
+<span id="cb23-59"><a href="#cb23-59"></a>    <span class="op">-</span><span class="st"> </span>udh.IDHM.Educação<span class="fl">.2010</span>,</span>
+<span id="cb23-60"><a href="#cb23-60"></a>    <span class="op">-</span><span class="st"> </span>udh.Taxa.de.analfabetismo...<span class="fl">25.</span>anos.ou.mais.de.idade<span class="fl">.2010</span>,</span>
+<span id="cb23-61"><a href="#cb23-61"></a>    <span class="op">-</span><span class="st"> </span>udh.Taxa.de.analfabetismo...<span class="fl">18.</span>anos.ou.mais.de.idade<span class="fl">.2010</span>,</span>
+<span id="cb23-62"><a href="#cb23-62"></a>    <span class="op">-</span><span class="st"> </span>udh.urbanity,</span>
+<span id="cb23-63"><a href="#cb23-63"></a>    <span class="op">-</span><span class="st"> </span>udh.rurality,</span>
+<span id="cb23-64"><a href="#cb23-64"></a>    <span class="op">-</span><span class="st"> </span>udh.cumul_age_<span class="dv">24</span>,</span>
+<span id="cb23-65"><a href="#cb23-65"></a>    <span class="op">-</span><span class="st"> </span>udh.young_ratio,</span>
+<span id="cb23-66"><a href="#cb23-66"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.População total 2010</span><span class="st">`</span>,</span>
+<span id="cb23-67"><a href="#cb23-67"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.População rural 2010</span><span class="st">`</span>,</span>
+<span id="cb23-68"><a href="#cb23-68"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.População urbana 2010</span><span class="st">`</span>,</span>
+<span id="cb23-69"><a href="#cb23-69"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.IDHM 2010</span><span class="st">`</span>,</span>
+<span id="cb23-70"><a href="#cb23-70"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.IDHM Educação 2010</span><span class="st">`</span>,</span>
+<span id="cb23-71"><a href="#cb23-71"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb23-72"><a href="#cb23-72"></a>    <span class="op">-</span><span class="st"> `</span><span class="dt">mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010</span><span class="st">`</span>,</span>
+<span id="cb23-73"><a href="#cb23-73"></a>    <span class="op">-</span><span class="st"> </span>mc.urbanity,</span>
+<span id="cb23-74"><a href="#cb23-74"></a>    <span class="op">-</span><span class="st"> </span>mc.rurality,</span>
+<span id="cb23-75"><a href="#cb23-75"></a>    <span class="op">-</span><span class="st"> </span>mc.cumul_age_<span class="dv">24</span>,</span>
+<span id="cb23-76"><a href="#cb23-76"></a>    <span class="op">-</span><span class="st"> </span>mc.young_ratio</span>
+<span id="cb23-77"><a href="#cb23-77"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>binded_df &lt;-<span class="st"> </span>binded_df <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">udh.Territorialidades =</span> <span class="kw">as.character</span>(udh.Territorialidades),</span>
+<span id="cb24-3"><a href="#cb24-3"></a>         <span class="dt">customer_city =</span> <span class="kw">as.character</span>(customer_city),</span>
+<span id="cb24-4"><a href="#cb24-4"></a>         <span class="dt">customer_city =</span> <span class="kw">ifelse</span>(<span class="op">!</span><span class="kw">is.na</span>(udh.Territorialidades) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(customer_city), </span>
+<span id="cb24-5"><a href="#cb24-5"></a>                                udh.Territorialidades, </span>
+<span id="cb24-6"><a href="#cb24-6"></a>                                customer_city),</span>
+<span id="cb24-7"><a href="#cb24-7"></a>         <span class="dt">customer_city =</span> <span class="kw">as.factor</span>(customer_city))</span></code></pre></div>
 </div>
 </div>
 

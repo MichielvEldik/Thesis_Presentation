@@ -13,8 +13,38 @@ output:
 
 # __<a href="index.html">Back to main</a>__
 
+# __1. Introduction__
 
-```{r }
+This page is about obtaining, cleansing, and blending external data with the review data set. 
+External data, in this case, is the 2010 Brazil nationwide population census.
+This was carried out by the Brazilian Institute of Geography and Statistics (Instituto Brasileiro de Geografia e Estatística).
+Data on human development and urbanization of an area are used because eventually, we want to make the link between such 
+geodemographic variables and review length and incidence. The written report describes the decisions in the data methodology in detail (from page 15 onwards). The paragraphs below 
+provide a short summary.\n
+
+Firstly, the internal (Olist) data is split up into two parts: those observations that are located within a 
+metropolitan area and those that are located outside of a metropolitan area. This is done because the external (census)
+data is available at a neighborhood level for metropolitan areas but only at a municipality level in non-metropolitan areas.\n
+
+The cases in a non-metropolitan area can be linked with relative ease. Both internal and external data sets have a column with the name 
+of the municipality so the data sets can be joined based on that name. All that needs to be done is make sure that the formats 
+are the same so that identical matches can be found.\n
+
+The cases in a metropolitan area are more tricky to link up with the external data as there isn't a common key shared between internal (Olist) and external (census):
+
+* __Internal (Olist):__ has coordinates based on zip-code prefixes and municipality names.
+* __External (census):__ has neighborhood names.
+
+There are two ways to approach this: (1) retrieve neighborhood names from the coordinates of the internal (Olist) data and 
+use this as a key for merging (reverse geocoding); or (2) retrieve coordinates from neighborhood names of the external (census) data and match both data sets based on the distance between coordinates (forward geocoding). Reverse geocoding is possible, however, it requires me to make a special account with Google to use their API. It's for free, but I do have to provide credit
+card details and there is a maximum number of queries. Per contra, forward geocoding can be done using the OpenStreetMap Nomatim API which is a completely open-source and free to use tool that only puts a limit on the number of queries I can make per minute. Therefore, my preference went out to forward geocoding.\n
+
+Note that treatment of external data is done seperately for each of the 21 metropolitan areas.\n
+
+The libraries used in this part:
+
+
+```{r message = FALSE, warning=FALSE}
 library(readxl)
 library(tidyr)
 library(dplyr)
@@ -28,7 +58,11 @@ library(stringi)
 ```
 
 
-# __Defining the necessary functions__
+# __2. Defining the necessary functions__
+
+This function is called from another function `column_fixer` and it is used to 
+indicate, in the external data set (census), whether the data are at municipality or neighborhood-level of aggregation.
+
 ```{r }
 locality_names <- function(input_data, data_level) {
   
@@ -55,12 +89,17 @@ locality_names <- function(input_data, data_level) {
 }
 ```
 
+This function cleans the external data set (census) to ensure it integrates well with the internal dataset once merged.
+I downloaded the external data set with a few too many columns. Furthermore, some rows are added but not necessary.
+It does some more things as well.
+
 ```{r }
 column_fixer <- function(new_data, data_level){
+  # the first and last row of each external dataset has some weird general info
   if (grepl("Brasil", head(new_data[, "Territorialidades"], n = 1)) &
       grepl("Fontes:", tail(new_data[, "Territorialidades"], n = 1))) {
     print("Ready for action.")
-    
+    # standardized character representation: Latin to ASCII
     new_data <- new_data %>%
       mutate(Territorialidades = as.character(Territorialidades),
              Territorialidades = stri_trans_general(Territorialidades, "Latin-ASCII"),
@@ -72,11 +111,13 @@ column_fixer <- function(new_data, data_level){
       ) %>%
       drop_na(Territorialidades
       ) %>%
+      # Create / derive some new variables based on extant ones
       mutate(
         urbanity = `População urbana 2010` / `População total 2010`,
         rurality = `População rural 2010` / `População total 2010`,
         rurality = ifelse(is.na(`População rural 2010`) == TRUE, 0, rurality)
       ) %>% 
+      # Again, create / derive new variable based on extant one
       mutate(cumul_age_24 = 
                `População masculina de 0 a 4 anos de idade 2010` +
                `População masculina de 5 a 9 anos de idade 2010` +
@@ -84,6 +125,7 @@ column_fixer <- function(new_data, data_level){
                `População masculina de 15 a 19 anos de idade 2010` + 
                `População masculina de 20 a 24 anos de idade 2010`
       ) %>%
+      # After doing this, we can discard them
       select(
         - `População masculina de 0 a 4 anos de idade 2010`,
         - `População masculina de 5 a 9 anos de idade 2010`,
@@ -93,19 +135,28 @@ column_fixer <- function(new_data, data_level){
         - `População masculina de 25 a 29 anos de idade 2010`,
         - `População masculina de 30 a 34 anos de idade 2010`
       ) %>%
+      # Yet again, a new, derived variable
       mutate(young_ratio = cumul_age_24 / `População total 2010`)
-    
+    # Call function that was mentioned in the previous chunk
+    # It basically makes sure that we know at all times whether data are -
+    # on  a municipality or neighborhood level of aggregation
     new_data <- locality_names(new_data, data_level)
     
     return(new_data)
     
   } else {
-    print("Not ready for action")
-    return("Something is wrong")
+    # Data need to be in a particulare format
+    print("Not ready for action") 
+    return("Something is wrong") 
     
   }
 }
 ```
+
+This function uses the extern data set (census), takes the neighborhood names, and uses the 
+function `geocode_OSM` to access the Nomatim OpenStreetMap API and find corresponding coordinates.
+In the case that it can't find anything, an error needs to be handled. This function is called from the
+`coordinate_retriever` function (below).
 
 ```{r }
 get_cors <- function(datasetje){
@@ -133,6 +184,10 @@ get_cors <- function(datasetje){
 }
 ```
 
+This function takes as input an external data set (census) for one of the metropolitan areas.
+It sort of 'prepares' the neighborhood names to make sure that queries to OpenStreetMap Nomatim API
+go as smoothly as possible. The actual query itself is done in the previously discussed function `get_cors`. 
+
 ```{r }
 coordinate_retriever <- function(input_udh_data, city_name) {
   input_udh_data <- input_udh_data %>%
@@ -158,6 +213,9 @@ coordinate_retriever <- function(input_udh_data, city_name) {
 }
 ```
 
+This function uses a nearest neighbor approach based on Euclidean distances to 
+connect the internal data set (Olist) and external dataset (census) based on the sets of 
+coordinates in both data sets. The `get.knnx()` was used to do this. 
 ```{r }
 udh_merge_ex_with_in <- function(internal_data, external_data, metro_munics) {
   
@@ -185,6 +243,11 @@ udh_merge_ex_with_in <- function(internal_data, external_data, metro_munics) {
   return(married)
 }
 ```
+
+I never wound up using this function. It does pretty much the same thing as the function discussed above,
+however, it uses Haversine distances rather than Euclidean distances. There is no option in `get.knnx()` that lets 
+me use Haversine distances so I had to manually program the nearest neighbor algorithm. It gave some weird, sub-optimal results 
+in the end, which also made me wonder if, perhaps, I made a mistake somewhere. If you see anything, let me know!
 
 ```{r }
 
@@ -244,7 +307,17 @@ haversine_function <- function(brazil_df, udh_df, metros_list){
 }
 ```
 
-# __Define municipalities per metro area__
+
+
+# __3. Define municipalities per metro area__
+This previous part was just about defining functions. In the next parts, we'll start calling those functions.
+However, we must first take a step back. The very first step is to identify whether a case in the internal data set (Olist) is located in 1 of the 21 metropolitan areas of Brazil or not.\n
+
+This is done by building a big list of municipality names that are indicated to be located within a metropolitan area.
+The chunck below shows how this was done for one metropolitan area. I wanted to spare you the ~ 800+ lines of codes for 
+all the other ones. It's simply copy-pasting the municipality names for a given metropolitan area (found on SIDRA.gov.br), 
+making a slight moderation to their format to integrate with the internal data set (Olist), and subsequently creating a huge 
+list of municipality names that can be used to filter through (next code chunk).
 
 ```{r }
 # Region: North
@@ -864,7 +937,7 @@ florianopolis_metro_municips <- tolower(florianopolis_metro_municips)
 florianopolis_metro_municips <- paste(florianopolis_metro_municips, "(sc)")
 ```
 
-```{r }
+```{r eval = FALSE}
 # all together
 all_udh_municips <- baixada_santista_metro_municips
 all_udh_municips <- append(all_udh_municips, belem_metro_municips)
@@ -892,7 +965,8 @@ all_udh_municips <- append(all_udh_municips, teresina_metro_municips)
 all_udh_municips <- append(all_udh_municips, vale_do_rio_cuiaba_metro_municips)
 ```
 
-```{r }
+This code chuck simply loads the external data sets (census) for all of the metropolitan regions.
+```{r eval = FALSE}
 # external data | udh (neighborhood) level, by metropolitan region
 sp_udh <- read_excel("./atlas_data/sao_paulo_udh.xlsx")
 fortaleza_udh <- read_excel("./atlas_data/fortaleza_udh.xlsx")
@@ -919,9 +993,8 @@ petrolina_juazeiro_udh <- read_excel("./atlas_data/petrolina_juazeiro_udh.xlsx")
 vale_do_rio_cuiaba_udh <- read_excel("./atlas_data/vale_do_rio_cuiaba_udh.xlsx")
 vale_do_paraiba_e_litoral_norte_udh <- read_excel("./atlas_data/vale_do_paraiba_e_litoral_norte_udh.xlsx")
 ```
-
-```{r }
-# Preparing datasets for query
+Preparing data sets for querying to get coordinates using the function `column_fixer()`.
+```{r eval = FALSE}
 sp_udh <- column_fixer(sp_udh, "udh")
 fortaleza_udh <- column_fixer(fortaleza_udh, "udh")
 recife_udh <- column_fixer(recife_udh, "udh")
@@ -947,9 +1020,9 @@ petrolina_juazeiro_udh <- column_fixer(petrolina_juazeiro_udh, "udh")
 vale_do_rio_cuiaba_udh <- column_fixer(vale_do_rio_cuiaba_udh, "udh")
 vale_do_paraiba_e_litoral_norte_udh <- column_fixer(vale_do_paraiba_e_litoral_norte_udh, "udh")
 ```
+Call function `coordinate_retriever()` with the external data sets (census) to get coordinates.
+```{r eval = FALSE}
 
-```{r }
-# call function with the datasets to query for coordinates
 sp_udh <- coordinate_retriever(sp_udh, "sao paulo")
 fortaleza_udh <- coordinate_retriever(fortaleza_udh, "fortaleza")
 recife_udh <- coordinate_retriever(recife_udh, "recife")
@@ -975,8 +1048,8 @@ petrolina_juazeiro_udh <- coordinate_retriever(petrolina_juazeiro_udh, "petrolin
 vale_do_rio_cuiaba_udh <- coordinate_retriever(vale_do_rio_cuiaba_udh, "mato grosso")
 vale_do_paraiba_e_litoral_norte_udh <- coordinate_retriever(vale_do_paraiba_e_litoral_norte_udh, "litoral norte")
 ```
-
-```{r }
+A backup never hurts.
+```{r eval = FALSE}
 # write as csv to avoid doing things over and over again
 write.csv(sp_udh, "./udh_queried_data/sao_paulo_udh_queried.csv")
 write.csv(fortaleza_udh, "./udh_queried_data/fortaleza_udh_queried.csv")
@@ -1004,30 +1077,362 @@ write.csv(vale_do_rio_cuiaba_udh, "./udh_queried_data/vale_do_rio_cuiaba_udh_que
 write.csv(vale_do_paraiba_e_litoral_norte_udh, "./udh_queried_data/vale_do_paraiba_e_litoral_norte_udh_queried.csv")
 ```
 
-```{r }
+# __4. Joining the internal (Olist) and external (census) data sets__
+## __4.1. Non-metropolitan areas__
+As explained in the introduction, all cases in non-metro areas can simply be joined based on name with the external data set (census). In the internal data set (Olist), the column of interest is `customer_city`, which is somewhat of a counter intuitive name because it almost fully consists of municipality names.\n
+
+Firstly, the names are transformed into a specific format to ensure that the join with external (census) will run successfully. 
+```{r eval = FALSE}
+# standardize "customer_city" to join municipality level smoothly
+brazil_df <- brazil_df %>%
+  mutate(customer_city = paste(customer_city, "(", sep = " "),
+         customer_city = paste(customer_city, customer_state, sep = ""),
+         customer_city = paste(customer_city, ")", sep=""),
+         
+         # already done beforehand but do it again just to be certain
+         customer_city = tolower(customer_city),
+         customer_city = iconv(customer_city, to = "ASCII//TRANSLIT")
+        )
+```
+Some (few) in "customer_city" are actual customer cities instead of municipalities so I searched the corresponding municipality names to these cities and saved it in an excel file. This was merged with the internal data set (Olist) to swap these city names with municipality names.
+```{r eval = FALSE}
+keys <- read_excel("dffort.xlsx")
+keys <- keys %>%
+  drop_na() %>%
+  mutate(new_names = as.character(new_names),
+         new_names = iconv(new_names, to = "ASCII//TRANSLIT"),
+         new_names = tolower(new_names)) %>%
+  select(- nummie)
+keys <- keys[!duplicated(keys$new_names),]
+brazil_df <- merge(brazil_df,
+                keys,
+                by.x = "customer_city",
+                by.y = "old_names",
+                all.x = TRUE)
+brazil_df <- brazil_df %>%
+  mutate(customer_city = ifelse(is.na(new_names) == TRUE, customer_city, new_names)) %>%
+  select(- new_names)
+```
+
+Remember the list we created beforehand with names of municipalities that are officially part of a metropolitan area? 
+Well we are now finally going to use it to seperate the non-metropolitan cases.
+```{r eval = FALSE}
+# Get all cases that are NOT in the list of metro-municipalities
+non_metros_1 <- brazil_df %>%
+  filter(!customer_city %in% all_udh_municips)
+```
+Next, it's time to read in the municipality-level (so non-metropolitan cases only) external data and prepare it for the merge. 
+Notice that "municip" is used as an argument for the function `column_fixer()`. This is to ensure that any column of the external data set (census) will be indicated with a sort of domain name "mun.". so for instance, the column "População.total.2010" will be turned into  "mun.População.total.2010". This is done to ensure that, when both subsets are combined again, I always know whether data refers to municipality-level or neighborhood-level aggregation. It doesn't really have a practical purpose other than giving me some clarity. 
+```{r eval = FALSE}
+# Read municipal level 2010 census data
+brazil_municip <- read_excel("./atlas_data/brazil_municipal.xlsx")
+brazil_municip <- column_fixer(brazil_municip, "municip")
+```
+
+Later down the road, we will bind non-metropolitan subset with the metropolitan subset.
+To do so successfully, the columns of both data sets should be identical. All metro-politan area data will be indicated with "udh." so we'll now just create a bunch of empty columns for that.\n
+
+As an outsider, I can imagine it seems a little weird, but for me it helped to retain a clear overview of what was going on.
+
+```{r eval = FALSE}
+# Add columns to ensure coumns are the same for rbind
+non_metros_1 <- non_metros_1 %>%
+  select(- index) %>%
+  mutate(
+    dist = NA,
+    udh.Territorialidades = NA,
+    udh.População.total.2010 = NA,
+    udh.População.rural.2010 = NA,
+    udh.População.urbana.2010 = NA,
+    udh.IDHM.2010 = NA,
+    udh.IDHM.Educação.2010 = NA,
+    udh.Taxa.de.analfabetismo...25.anos.ou.mais.de.idade.2010 = NA,
+    udh.Taxa.de.analfabetismo...18.anos.ou.mais.de.idade.2010 = NA,
+    udh.urbanity = NA,
+    udh.rurality = NA,
+    udh.cumul_age_24 = NA,
+    udh.young_ratio = NA,
+    udh.lat = NA,
+    udh.long = NA,
+    metro = NA
+  )
+```
+Finally, we merge internal and external municipality-level data on municipality name
+```{r eval = FALSE}
+non_metros_1 <- merge(non_metros_1,
+                      brazil_municip,
+                      by.x = "customer_city",
+                      by.y = "mc.Territorialidades",
+                      all.x = TRUE)
+```
+
+## __4.2. Metropolitan areas__
+For the metropolitan areas, we simply use the `udh_merge_ex_with_in` function for each metropolitan area.
+This will find link the internal data set (Olist) cases with external census data for the two closest points. 
+Note that the "metro" column was added just to provide an indication of which metropolitan area the data is on.
+```{r eval = FALSE}
+sao_paulo_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                             sp_udh, 
+                                             sao_paulo_metro_municips)
+sao_paulo_udh_merged$metro <- "sao_paulo"
+fortaleza_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                             fortaleza_udh, 
+                                             fortaleza_metro_municips)
+fortaleza_udh_merged$metro <- "fortaleza"
+recife_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                          recife_udh, 
+                                          recife_metro_municips)
+recife_udh_merged$metro <- "recife"
+rio_dj_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                          rio_dj_udh, 
+                                          rio_dj_metro_municips)
+rio_dj_udh_merged$metro <- "rio_de_janeiro"
+salvador_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            salvador_udh, 
+                                            salvador_metro_municips)
+salvador_udh_merged$metro <- "salvador"
+porto_alegre_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                porto_alegre_udh, 
+                                                porto_alegre_metro_municips)
+porto_alegre_udh_merged$metro <- "porto_alegre"
+natal_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                         natal_udh, 
+                                         natal_metro_municips)
+natal_udh_merged$metro <- "natal"
+maceio_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                          maceio_udh, 
+                                          maceio_metro_municips)
+maceio_udh_merged$metro <- "maceio"
+belo_horizonte_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                  belo_horizonte_udh, 
+                                                  belo_horizonte_metro_municips)
+belo_horizonte_udh_merged$metro <- "belo_horizonte"
+campinas_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            campinas_udh, 
+                                            campinas_metro_municips)
+campinas_udh_merged$metro <- "campinas"
+curitiba_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            curitiba_udh, 
+                                            curitiba_metro_municips)
+curitiba_udh_merged$metro <- "curitiba"
+belem_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                         belem_udh, 
+                                         belem_metro_municips)
+belem_udh_merged$metro <- "belem"
+goiania_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                           goiania_udh, 
+                                           goiania_metro_municips)
+goiania_udh_merged$metro <- "goiania"
+grande_vitoria_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                  grande_vitoria_udh, 
+                                                  grande_vitoria_metro_municips)
+grande_vitoria_udh_merged$metro <- "grande_vitoria"
+florianopolis_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                 florianopolis_udh, 
+                                                 florianopolis_metro_municips)
+florianopolis_udh_merged$metro <- "florianopolis"
+manaus_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                          manaus_udh, 
+                                          manaus_metro_municips)
+manaus_udh_merged$metro <- "manaus"
+sao_luis_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            sao_luis_udh, 
+                                            sao_luis_metro_municips)
+sao_luis_udh_merged$metro <- "sao_luis"
+sorocaba_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            sorocaba_udh, 
+                                            sorocaba_metro_municips)
+sorocaba_udh_merged$metro <- "sorocaba"
+baixada_santista_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                    baixada_santista_udh, 
+                                                    baixada_santista_metro_municips)
+baixada_santista_udh_merged$metro <- "baixada_santista"
+brasilia_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            brasilia_udh, 
+                                            brasilia_metro_municips) 
+brasilia_udh_merged$metro <- "brasilia"
+teresina_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                            teresina_udh, 
+                                            teresina_metro_municips)
+teresina_udh_merged$metro <- "teresina"
+petrolina_juazeiro_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                      petrolina_juazeiro_udh, 
+                                                      petrolina_juazeiro_metro_municips )
+petrolina_juazeiro_udh_merged$metro <- "petrolina_juazeiro"
+vale_do_rio_cuiaba_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                      vale_do_rio_cuiaba_udh, 
+                                                      vale_do_rio_cuiaba_metro_municips)
+vale_do_rio_cuiaba_udh_merged$metro <- "vale_do_rio_cuiaba"
+vale_do_paraiba_e_litoral_norte_udh_merged <- udh_merge_ex_with_in(brazil_df, 
+                                                                   vale_do_paraiba_e_litoral_norte_udh,
+                                                                   litoral_norte_metro_municips)
+vale_do_paraiba_e_litoral_norte_udh_merged$metro <- "litoral_norte"
+```
+
+Turn all seperate UDH data into 1 big metro datset.
+```{r eval = FALSE}
+metros_1_euclidean <- rbind(sao_paulo_udh_merged, fortaleza_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, recife_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, rio_dj_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, salvador_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, porto_alegre_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, natal_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, maceio_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, belo_horizonte_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, curitiba_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, belem_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, goiania_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, grande_vitoria_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, florianopolis_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, manaus_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, sao_luis_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, sorocaba_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, baixada_santista_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, brasilia_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, teresina_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, petrolina_juazeiro_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, vale_do_rio_cuiaba_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, vale_do_paraiba_e_litoral_norte_udh_merged)
+metros_1_euclidean <- rbind(metros_1_euclidean, campinas_udh_merged)
+```
+
+# __5. Bind together the municipality-level data and the metro data__
+
+```{r eval = FALSE}
+# Fix some names that went weird because Windows can't handle these characters
+metros_1_euclidean <- metros_1_euclidean %>%
+  rename(udh.População.total.2010  = udh.PopulaÃ.Ã.o.total.2010,
+         udh.População.rural.2010  = udh.PopulaÃ.Ã.o.rural.2010,
+         udh.População.urbana.2010 = udh.PopulaÃ.Ã.o.urbana.2010,
+         udh.IDHM.Educação.2010    = udh.IDHM.EducaÃ.Ã.o.2010)
+
+# Sort out the precise columns to ensure a smooth rbind
+metros_1 <- metros_1_euclidean %>%
+  select(
+    - index_other_data, 
+    - X,               
+    - index,
+    - local_index
+  ) %>%
+  mutate(
+    `mc.População total 2010` = NA,
+    `mc.População rural 2010` = NA,
+    `mc.População urbana 2010` = NA,
+    `mc.IDHM 2010` = NA,
+    `mc.IDHM Educação 2010` = NA,
+    `mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010` = NA,
+    `mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010` = NA,
+    mc.urbanity = NA,
+    mc.rurality = NA,
+    mc.cumul_age_24 = NA,
+    mc.young_ratio = NA
+  ) %>%
+  filter(
+    dist < 2 # to deal with extreme distances
+  )
+
+# Put together both sides of the equation
+binded_df <- rbind(metros_1, non_metros_1)
+
+# Take care of double NA rows.
+binded_df <- subset(binded_df, # xor works because there are no overlaps on 1
+                    xor(is.na(mc.young_ratio), 
+                        is.na(udh.long))) # implement 
+```
+
+# __6. Make everything neat and nice__
+Things are still a little messy, especially the namings of some columns. This part fixes that.
+
+```{r eval = FALSE}
+binded_df <- binded_df %>%
+  # First fill with mc data
+  mutate(new_total_pop = `mc.População total 2010`,
+         new_total_rural = `mc.População rural 2010`,
+         new_total_urban = `mc.População urbana 2010`,
+         new_idhm = `mc.IDHM 2010`,
+         new_idhm_edu = `mc.IDHM Educação 2010`,
+         new_anafal_25_oumais = `mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010`,
+         new_anafal_18_oumais = `mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010`,
+         new_urbanity = mc.urbanity,
+         new_rurality = mc.rurality,
+         new_cumul_age_24 = mc.cumul_age_24,
+         new_young_ratio = mc.young_ratio
+  ) %>%
+  # If na, fill up with the udh data
+  mutate(
+    new_total_pop = ifelse(is.na(new_total_pop) == TRUE, 
+                             udh.População.total.2010, 
+                             new_total_pop),
+    new_total_rural = ifelse(is.na(new_total_rural) == TRUE, 
+                             udh.População.rural.2010, 
+                             new_total_rural),
+    new_total_urban = ifelse(is.na(new_total_urban) == TRUE, 
+                             udh.População.urbana.2010, 
+                             new_total_urban),
+    new_idhm = ifelse(is.na(new_idhm) == TRUE, 
+                             udh.IDHM.2010, 
+                             new_idhm),
+    new_idhm_edu = ifelse(is.na(new_idhm_edu) == TRUE, 
+                             udh.IDHM.Educação.2010, 
+                             new_idhm_edu),
+    new_anafal_25_oumais = ifelse(is.na(new_anafal_25_oumais) == TRUE, 
+                             udh.Taxa.de.analfabetismo...25.anos.ou.mais.de.idade.2010,
+                             new_anafal_25_oumais),
+    new_anafal_18_oumais = ifelse(is.na(new_anafal_18_oumais) == TRUE, 
+                             udh.Taxa.de.analfabetismo...18.anos.ou.mais.de.idade.2010, 
+                             new_anafal_18_oumais),
+    new_urbanity = ifelse(is.na(new_urbanity) == TRUE, 
+                             udh.urbanity, 
+                             new_urbanity),
+    new_rurality = ifelse(is.na(new_rurality) == TRUE, 
+                             udh.rurality, 
+                             new_rurality),
+    new_cumul_age_24 = ifelse(is.na(new_cumul_age_24) == TRUE, 
+                             udh.cumul_age_24, 
+                             new_cumul_age_24),
+    new_young_ratio = ifelse(is.na(new_young_ratio) == TRUE, 
+                             udh.young_ratio, 
+                             new_young_ratio)
+  ) %>%
+  mutate(
+    udh_indicator = ifelse(is.na(udh.urbanity) == FALSE, 1, 0)
+  ) %>%
+  select(
+    - udh.População.total.2010,
+    - udh.População.rural.2010,
+    - udh.População.urbana.2010,
+    - udh.IDHM.2010,
+    - udh.IDHM.Educação.2010,
+    - udh.Taxa.de.analfabetismo...25.anos.ou.mais.de.idade.2010,
+    - udh.Taxa.de.analfabetismo...18.anos.ou.mais.de.idade.2010,
+    - udh.urbanity,
+    - udh.rurality,
+    - udh.cumul_age_24,
+    - udh.young_ratio,
+    - `mc.População total 2010`,
+    - `mc.População rural 2010`,
+    - `mc.População urbana 2010`,
+    - `mc.IDHM 2010`,
+    - `mc.IDHM Educação 2010`,
+    - `mc.Taxa de analfabetismo - 25 anos ou mais de idade 2010`,
+    - `mc.Taxa de analfabetismo - 18 anos ou mais de idade 2010`,
+    - mc.urbanity,
+    - mc.rurality,
+    - mc.cumul_age_24,
+    - mc.young_ratio
+  )
+```
+
+```{r eval = FALSE}
+binded_df <- binded_df %>%
+  mutate(udh.Territorialidades = as.character(udh.Territorialidades),
+         customer_city = as.character(customer_city),
+         customer_city = ifelse(!is.na(udh.Territorialidades) & !is.na(customer_city), 
+                                udh.Territorialidades, 
+                                customer_city),
+         customer_city = as.factor(customer_city))
 
 ```
 
-```{r }
 
-```
 
-```{r }
-
-```
-
-```{r }
-
-```
-
-```{r }
-
-```
-
-```{r }
-
-```
-
-```{r }
-
-```
