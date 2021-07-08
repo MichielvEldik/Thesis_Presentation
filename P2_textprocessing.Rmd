@@ -11,7 +11,7 @@ output:
     highlight: tango
 ---
 
-# __<a href="index.html">Back to main</a>__
+__<a href="index.html">Back to main</a>__
 
 # __1. Introduction__
 The focus of the thesis was not specifically on text analysis, however, 
@@ -341,3 +341,5 @@ brazil_df <- brazil_df %>%
                               )
         )
 ```
+
+__<a href="index.html">Back to main</a>__

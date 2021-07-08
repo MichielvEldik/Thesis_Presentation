@@ -11,7 +11,7 @@ output:
     highlight: tango
 ---
 
-# __<a href="index.html">Back to main</a>__
+__<a href="index.html">Back to main</a>__
 
 # __1. Introduction__
 
@@ -1435,4 +1435,4 @@ binded_df <- binded_df %>%
 ```
 
 
-
+__<a href="index.html">Back to main</a>__

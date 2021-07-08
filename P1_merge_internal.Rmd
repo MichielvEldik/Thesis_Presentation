@@ -11,7 +11,7 @@ output:
     highlight: tango
 ---
 
-# __<a href="index.html">Back to main</a>__
+__<a href="index.html">Back to main</a>__
 
 # __1. Introduction__
 
@@ -450,6 +450,6 @@ Save data frame as csv to use in next script. Kind of like a cache
 write.csv(base_df, "full_geomerged_df.csv", row.names = FALSE)
 ```
 
-
+__<a href="index.html">Back to main</a>__
 
 

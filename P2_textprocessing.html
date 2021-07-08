@@ -7,7 +7,7 @@
 
         <meta name="author" content="Michiel van Eldik" />
     
-        <meta name="date" content="2021-07-07" />
+        <meta name="date" content="2021-07-08" />
     
     <title>P1_text_processing</title>
 
@@ -1843,13 +1843,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="Sidebar">
           <div class="SidebarItems" id="toc">
             <ul>
-            <li><a href="#back-to-main"><strong><a href="index.html">Back to main</a></strong></a></li>
             <li><a href="#introduction"><strong>1. Introduction</strong></a></li>
             <li><a href="#pre-lemmatization-sentence-cleaning"><strong>2. Pre-lemmatization sentence cleaning</strong></a></li>
             <li><a href="#lemmatization"><strong>3. Lemmatization</strong></a></li>
-            <li><a href="#filtering-unwanted-words"><strong>4. Filtering unwanted words</strong></a></li>
+            <li><a href="#filtering-unwanted-words"><strong>4. Filtering unwanted words</strong></a><ul>
             <li><a href="#obtaining-a-collection-of-words-to-discard"><strong>4.1. Obtaining a collection of words to discard</strong></a></li>
             <li><a href="#using-the-collection-to-discard-the-unwanted-words"><strong>4.2. Using the collection to discard the unwanted words</strong></a></li>
+            </ul></li>
             <li><a href="#create-the-column-of-message-title"><strong>5. Create the column of message + title</strong></a></li>
             </ul>
           </div>
@@ -1865,16 +1865,14 @@ document.addEventListener('DOMContentLoaded', function() {
       <p class="authors">
            <span class="glyphicon glyphicon-user"></span> Michiel van Eldik
       </p>
-         <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-07-07</p>
+         <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-07-08</p>
          
    
       
    
 <!-- Don't indent these lines or it will mess pre blocks indentation --> 
 <div class="page-content has-page-title">
-<div id="back-to-main" class="section level1">
-<h1><strong><a href="index.html">Back to main</a></strong></h1>
-</div>
+<p><strong><a href="index.html">Back to main</a></strong></p>
 <div id="introduction" class="section level1">
 <h1><strong>1. Introduction</strong></h1>
 <p>The focus of the thesis was not specifically on text analysis, however, an important condition for robustness is that effects hold despite freight issues. This requires us to be able to recognize freight issues. The dataset provides estimated and delivered times but a glance at the written reviews reveals that this likely occurs much more frequently than is recorded. The goal of this page is hence to be able to indicate, from the written messages, whether there the message was freight-related. This can be done using a fairly simple filtering list. This works best if words are lemmatized. The entire process of cleaning to filtering is presented.</p>
@@ -1995,9 +1993,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <span id="cb8-9"><a href="#cb8-9"></a>      review_comment_title,</span>
 <span id="cb8-10"><a href="#cb8-10"></a>       <span class="st">&quot;Latin-ASCII&quot;</span>)</span>
 <span id="cb8-11"><a href="#cb8-11"></a>        )</span></code></pre></div>
-</div>
-<div id="obtaining-a-collection-of-words-to-discard" class="section level1">
-<h1><strong>4.1. Obtaining a collection of words to discard</strong></h1>
+<div id="obtaining-a-collection-of-words-to-discard" class="section level2">
+<h2><strong>4.1. Obtaining a collection of words to discard</strong></h2>
 <p>Many words in the text are not useful or meaningful. I hence create a kind of dictionary (not technically one though) to store all of the unwanted words. Beforehand, I create a special version of the data with a format that is basically a dataframe with all words and their frequencies.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># tidy text format shows word frequencies</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>text_df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">line =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(brazil_df), </span>
@@ -2071,8 +2068,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Keep only unique elements in dic</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a>dic &lt;-<span class="st"> </span><span class="kw">unique</span>(dic)</span></code></pre></div>
 </div>
-<div id="using-the-collection-to-discard-the-unwanted-words" class="section level1">
-<h1><strong>4.2. Using the collection to discard the unwanted words</strong></h1>
+<div id="using-the-collection-to-discard-the-unwanted-words" class="section level2">
+<h2><strong>4.2. Using the collection to discard the unwanted words</strong></h2>
 <p>Firstly, create a new data frame to store the newly corrected messages.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># message</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a>empty_df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(brazil_df<span class="op">$</span>review_id)</span>
@@ -2099,6 +2096,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <span id="cb25-6"><a href="#cb25-6"></a>}</span>
 <span id="cb25-7"><a href="#cb25-7"></a>brazil_df<span class="op">$</span>review_comment_message &lt;-<span class="st"> </span>empty_df<span class="op">$</span>new_stuff</span></code></pre></div>
 </div>
+</div>
 <div id="create-the-column-of-message-title" class="section level1">
 <h1><strong>5. Create the column of message + title</strong></h1>
 <p>The motivation behind creating this column is that it can help to identify if someone has made any type of response at all, whether that be a message or simply a title. Also, it gives a full picture of someone’s response if they used both a title and message.</p>
@@ -2122,6 +2120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <span id="cb27-15"><a href="#cb27-15"></a>    <span class="dt">message_and_title =</span> <span class="kw">ifelse</span>(message_and_title <span class="op">==</span><span class="st"> &quot;0&quot;</span>, <span class="ot">NA</span>, message_and_title</span>
 <span id="cb27-16"><a href="#cb27-16"></a>                              )</span>
 <span id="cb27-17"><a href="#cb27-17"></a>        )</span></code></pre></div>
+<p><strong><a href="index.html">Back to main</a></strong></p>
 </div>
 </div>
 
