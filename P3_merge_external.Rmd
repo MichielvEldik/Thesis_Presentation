@@ -1431,7 +1431,6 @@ binded_df <- binded_df %>%
                                 udh.Territorialidades, 
                                 customer_city),
          customer_city = as.factor(customer_city))
-
 ```
 
 

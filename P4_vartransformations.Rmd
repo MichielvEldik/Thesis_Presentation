@@ -1,0 +1,213 @@
+---
+title: "Variable transformations"
+author: "Michiel van Eldik"
+date: "`r Sys.Date()`"
+output:
+   rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+__<a href="index.html">Back to main</a>__
+
+# __1. Introduction__
+Nothing spectacular is going on in this section.
+All we're doing is transforming and renaming some variables to prepare for analyses.
+
+```{r message=FALSE, warning=FALSE}
+library(lubridate) # For dates
+library(dplyr)
+library(CORElearn) # For discretization
+library(arulesCBA) # For discretization
+
+```
+
+# __2. Time-related variables__ 
+This chunk changes the columns with date to an actual data format, which can be used to apply arithmetic operations. 
+```{r eval = FALSE}
+# To date format
+brazil_df <- brazil_df %>%
+  mutate(
+    review_creation_date = as.Date(review_creation_date,
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    review_answer_timestamp = as.Date(review_answer_timestamp,
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    order_purchase_timestamp = as.Date(order_purchase_timestamp, 
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    order_approved_at = as.Date(order_approved_at,
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    order_delivered_carrier_date = as.Date(order_delivered_carrier_date,
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    order_delivered_customer_date = as.Date(order_delivered_customer_date,
+                                      format = "%Y-%m-%d %H:%M:%S"),
+    order_estimated_delivery_date = as.Date(order_estimated_delivery_date,
+                                      format = "%Y-%m-%d %H:%M:%S")
+        )
+```
+
+Calculate time length through temporal differences.
+```{r eval = FALSE}
+brazil_df <- brazil_df %>%
+  mutate(
+    diff_est_deliv = order_estimated_delivery_date - order_delivered_customer_date,
+    diff_pur_est  = order_estimated_delivery_date - order_purchase_timestamp,
+    diff_pur_deliv = order_delivered_customer_date - order_purchase_timestamp,
+    diff_rev_crea_ans = review_creation_date - review_answer_timestamp,
+    diff_rev_est_ans = order_estimated_delivery_date - review_answer_timestamp,
+    diff_rev_deliv_ans = order_delivered_customer_date - review_answer_timestamp
+        )
+```
+Record temporal data.
+```{r eval = FALSE}
+brazil_df <- brazil_df %>%
+  mutate(
+    # show weekday of a date
+    review_sent_dow = wday(review_creation_date, label = TRUE),
+    review_answer_dow = wday(review_answer_timestamp, label = TRUE),
+    # Dummy variable weekend yes/no
+    review_sent_wknd = ifelse(
+      review_sent_dow == "zo" | review_sent_dow == "za", 1, 0),
+    review_answer_wknd = ifelse(
+      review_answer_dow == "zo" | review_answer_dow == "za", 1, 0),
+    # Month for seasonality
+    review_sent_moy = month(review_creation_date, label = TRUE)
+        )
+```
+
+```{r eval = FALSE}
+# Year as seperate variables
+brazil_df<- brazil_df %>%
+  mutate(
+    y_2016 = ifelse(year(order_purchase_timestamp) == "2016", 1, 0),
+    y_2017 = ifelse(year(order_purchase_timestamp) == "2017", 1, 0),
+    y_2018 = ifelse(year(order_purchase_timestamp) == "2016", 1, 0)
+        )
+# Year as 1 factor variable 
+brazil_df$year <- "2016"
+brazil_df <- brazil_df %>%
+  mutate(year = ifelse(y_2017 == 1, "2017", year),
+         year = ifelse(y_2018 == 1, "2018", year),
+         year = as.factor(year))
+
+brazil_df <- brazil_df %>%
+  mutate(sent_sun = ifelse(review_sent_dow == "zo", 1, 0),
+         sent_mon = ifelse(review_sent_dow == "ma", 1, 0),
+         sent_tue = ifelse(review_sent_dow == "di", 1, 0),
+         sent_wed = ifelse(review_sent_dow == "wo", 1, 0),
+         sent_thu = ifelse(review_sent_dow == "do", 1, 0),
+         sent_fri = ifelse(review_sent_dow == "vr", 1, 0),
+         sent_sat = ifelse(review_sent_dow == "za", 1, 0)
+        )
+```
+
+# __3. Message and title derived variables__
+
+```{r eval = FALSE}
+# Create dummy for message vs no message [BASED ON AFTER LEMMA]
+brazil_df <- brazil_df %>%
+  mutate(review_comment_message = as.character(review_comment_message),
+         message_length = nchar(review_comment_message),
+         message_bool = ifelse(is.na(review_comment_message), 0, 1)
+        )
+
+# Create dummy for message vs no message [BASED ON BEFORE LEMMA]
+brazil_df <- brazil_df %>%
+  mutate(bef_message_bool = ifelse(bef_nchar == 0, 0, 1))
+
+# Create a dummy variable for title message
+brazil_df <- brazil_df %>%
+  mutate(review_comment_title = as.character(review_comment_title),
+         title_length = nchar(review_comment_title),
+         title_bool = ifelse(is.na(review_comment_title), 0, 1)
+        )
+
+# Create a dummy variable for title OR, AND message
+brazil_df <- brazil_df %>%
+  mutate(title_or_message = ifelse(message_bool == 1 | title_bool == 1, 1, 0),
+         title_and_message = ifelse(message_bool == 1 & title_bool == 1, 1, 0),
+         title_nor_message = ifelse(message_bool == 0 & title_bool == 0, 1, 0)
+        )
+
+# Top2box transformation
+brazil_df <- brazil_df %>%
+  mutate(top2box = ifelse(review_score > 3, 1, 0))
+```
+
+# __4. Region variables__
+```{r eval = FALSE}
+c_north <- c("AC","AP","AM","PA", "RO", "RR", "TO")
+c_south <- c("SC", "RS", "PR")
+c_southeast <- c("SP", "RJ", "MG", "ES")
+c_northeast <- c("AL", "BA", "CE", "MA", "RN", "SE", "PI", "PB", "PE")
+c_centerwest <- c("MT", "MS", "GO", "DF")
+
+brazil_df$north <- 0
+brazil_df$south <- 0
+brazil_df$southeast <- 0
+brazil_df$northeast <- 0
+brazil_df$centerwest <- 0
+
+brazil_df <- brazil_df %>% 
+  mutate(north = ifelse(customer_state %in% c_north, 1,0),
+         south = ifelse(customer_state %in% c_south, 1,0),
+         southeast = ifelse(customer_state %in% c_southeast, 1,0),
+         northeast = ifelse(customer_state %in% c_northeast, 1,0),
+         centerwest = ifelse(customer_state %in% c_centerwest, 1,0),
+        )
+
+brazil_df <- brazil_df %>% 
+  mutate(region = ifelse(north == 1, "north", ""),
+         region = ifelse(northeast == 1, "northeast", region),
+         region = ifelse(centerwest == 1, "centerwest", region),
+         region = ifelse(southeast == 1, "southeast", region),
+         region = ifelse(south == 1, "south", region),
+         region = ifelse(customer_state == "DF", "southeast", region), # Belongs to southeast, culturally
+         region = as.factor(region))
+```
+
+# __5. Distinguish freight-related messages__
+```{r eval = FALSE}
+# Due to lemmatization we don't need to worry about tenses
+listje <- c("receb", # received
+            "aguar", # wait 
+            "ainda", # yet 
+            "faltou", # missed
+            "faltar", # missed 
+            "incompleto", # incomplete 
+            "nunca chegar", # never came / arrived
+            "chegar", # To arrive
+            "entregar", # deliver 
+            "nao entregar", # not delivered 
+            "antar do prazo", # before the term / deadline
+            "prazo" # term / deadline
+           )
+
+# To fill up
+brazil_df$freight_issue_bool <- 0
+
+# If any of the words in the list can be found, add "1"
+for (i in listje){
+  brazil_df$freight_issue_bool <- ifelse(
+    grepl(i, brazil_df$message_and_title), 
+    1, 
+    brazil_df$freight_issue_bool)
+}
+
+# Sanity test to see if it worked
+test_out <- brazil_df[
+  brazil_df$freight_issue_bool == 1, 
+  c("review_comment_message",
+    "freight_issue_bool",
+    "review_score"
+    )]
+
+# When order is delivered after the estimated date, we name it "order_issue"
+brazil_df <- brazil_df %>%
+  mutate(other_issue = ifelse(diff_est_deliv > 1, 1, 0))
+```
+
+__<a href="index.html">Back to main</a>__
+

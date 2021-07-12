@@ -1,5 +1,5 @@
 ---
-title: "P1_text_processing"
+title: "Text processing"
 author: "Michiel van Eldik"
 date: "`r Sys.Date()`"
 output:

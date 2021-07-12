@@ -1,0 +1,419 @@
+---
+title: "Some visuals"
+author: "Michiel van Eldik"
+date: "`r Sys.Date()`"
+output:
+   rmdformats::downcute:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+__<a href="index.html">Back to main</a>__
+
+# __1. Introduction__
+This part shows some of the final preparations and data exploration through some visualizations.
+
+```{r message=FALSE, warning=FALSE}
+library(car)
+library(dplyr)
+library(ggplot2)
+library(stargazer)
+```
+
+# __2. Final touches before visuals__
+A few minor adjustments had to be made in order to start exploring the data.\n
+```{r echo = FALSE}
+input <- read.csv("full_geomerged_df_4.csv")
+brazil_df <- input
+```
+Firstly, we turn variables from string to a factor format.
+```{r }
+cols <- c("bef_message_bool",
+          "max_price_disc",
+          "item_count_disc",
+          "urbanity_disc",
+          "freight_issue_bool",
+          "review_score",
+          "north",
+          "northeast",
+          "centerwest",
+          "south",
+          "southeast",
+          "y_2016",
+          "y_2017",
+          "y_2018",
+          "year",
+          "top2box",
+          "experience_goods",
+          "search_goods",
+          "intimate_goods",
+          "review_sent_wknd",
+          "review_answer_wknd",
+          "sent_sun",
+          "sent_mon",
+          "sent_tue",
+          "sent_wed",
+          "sent_thu",
+          "sent_fri",
+          "sent_sat",
+          "title_bool",
+          "title_or_message",
+          "title_and_message",
+          "title_nor_message")
+
+# apply as factor to all columns named above
+brazil_df[,cols] <- lapply(brazil_df[cols], function(x) as.factor(x))
+
+# Fix order 
+brazil_df <- brazil_df %>%
+  mutate(item_count_disc = factor(item_count_disc, 
+                                  levels = c("single", "multiple", "large")))
+# fix order
+brazil_df <- brazil_df %>%
+  mutate(hdi_class_col = factor(hdi_class_col, levels = c("low_medium", 
+                                                          "high", 
+                                                          "very high")))
+```
+Case wise deletion for missingness in relevant variables.
+```{r }
+brazil_df <- brazil_df %>%
+  filter(order_status == "delivered")
+
+brazil_df <- brazil_df %>%
+  filter(! is.na(product_category_name))
+
+brazil_df <- brazil_df %>%
+  filter(!is.na(bef_message_bool))
+
+brazil_df <- brazil_df %>%
+  filter(!is.na(diff_est_deliv))
+
+brazil_df <- brazil_df %>%
+  mutate(item_count_bin = ifelse(item_count_disc == "single", 1, 0))
+
+brazil_df <- brazil_df %>%
+  filter(!is.na(product_height_cm))
+```
+Creation of the variable that approximates whether a purchase of a product was above the median price
+of that product's category.
+```{r eval = FALSE}
+cats <- as.character(levels(brazil_df$product_category_name))
+nrep <- rep(0, length(cats))
+prod_uniques <- as.data.frame(nrep, cats)
+prod_uniques$median_approx <- 0
+counter <- 1
+for (i in levels(brazil_df$product_category_name)) {
+  prod_uniques[counter,1] <- length(unique(brazil_df[brazil_df$product_category_name == i,]$product_id.y))
+  counter <- counter + 1 
+}
+```
+Mean centering continuous variables for interpretation purposes.
+```{r }
+center_scale <- function(x) {
+  scale(x, scale = FALSE)
+}
+
+brazil_df$mc_new_idhm <- center_scale(brazil_df$new_idhm)
+brazil_df$mc_new_young_ratio <- center_scale(brazil_df$new_young_ratio)
+brazil_df$new_urbanity <- center_scale(brazil_df$new_urbanity)
+
+stargazer(brazil_df[brazil_df$udh_indicator == 1,c("new_idhm", "new_young_ratio")],
+          brazil_df[brazil_df$udh_indicator == 0,c("new_idhm", "new_young_ratio")],
+          flip = TRUE,
+          type = "text")
+
+stargazer(summary(brazil_df[,"bef_message_bool"]), type = "text")
+```
+
+```{r echo = FALSE}
+brazil_df <- brazil_df %>%
+  mutate(other_issue = ifelse(diff_est_deliv > 1, 1, 0))
+
+```
+
+# __3. Visualizations__
+Check: how many people have more than 2 items per order?
+```{r }
+# PART 2: FIRST INSIGHTS
+################################################################################
+
+
+more_than_2 <- brazil_df %>% 
+  group_by(customer_unique_id) %>% 
+  summarise(count = n())
+
+more_than_2 <- more_than_2 %>% 
+  mutate(two_or_one = ifelse(count >2, 0, 1), 
+         one = ifelse(count == 1, 1, 0))
+
+
+mean(more_than_2$two_or_one)
+mean(more_than_2$one)
+```
+The first visual has the purpose of showing us state counts of Human Development category per region. 
+This is relevant because, if there are shortages or major imbalances, it might affect the results from analyses.
+```{r }
+pop <- brazil_df %>%
+  group_by(region, hdi_class_col, bef_message_bool) %>%
+  summarise(n = n())
+
+zero_low <- sum(pop[pop$hdi_class_col == "low_medium" & pop$bef_message_bool == 0,]$n)
+zero_high <- sum(pop[pop$hdi_class_col == "high" & pop$bef_message_bool == 0,]$n)
+zero_veryhigh <- sum(pop[pop$hdi_class_col == "very high" & pop$bef_message_bool == 0,]$n)
+
+one_low <- sum(pop[pop$hdi_class_col == "low_medium" & pop$bef_message_bool == 1,]$n)
+one_high <- sum(pop[pop$hdi_class_col == "high" & pop$bef_message_bool == 1,]$n)
+one_veryhigh <- sum(pop[pop$hdi_class_col == "very high" & pop$bef_message_bool == 1,]$n)
+
+pop[nrow(pop)+1,] <- NA
+pop[nrow(pop)+1,] <- NA
+pop[nrow(pop)+1,] <- NA
+pop[nrow(pop)+1,] <- NA
+pop[nrow(pop)+1,] <- NA
+pop[nrow(pop)+1,] <- NA
+
+
+# Add Full dist
+pop <- pop %>%
+  mutate(region = as.character(region),
+         hdi_class_col = as.character(hdi_class_col),
+         bef_message_bool = as.character(bef_message_bool))
+
+pop[31:36,1] <- "full"
+pop[31:36,2] <- c("low_medium", "low_medium",
+                  "high", "high",
+                  "very high", "very high")
+pop[31:36,3] <- c("0", "1",
+                  "0", "1",
+                  "0", "1")
+pop[31:36,4] <- c(zero_low, one_low,
+                  zero_high, one_high,
+                  zero_veryhigh, one_veryhigh)
+pop <- pop %>%
+  mutate(region = as.factor(region),
+         hdi_class_col = as.factor(hdi_class_col),
+         bef_message_bool = as.factor(bef_message_bool))
+
+pop <- pop %>%
+  mutate(region = factor(region, levels = c("centerwest",
+                                            "north",
+                                            "northeast",
+                                            "south",
+                                            "southeast",
+                                            "full")),
+         hdi_class_col = factor(hdi_class_col, levels = c("low_medium",
+                                                          "high",
+                                                          "very high")))
+to_go <- c(2,
+           4,
+           6,
+           8,
+           10,
+           12,
+           14,
+           16,
+           18,
+           20,
+           22,
+           24,
+           26,
+           28,
+           30,
+           32,
+           34,
+           36)
+
+new_vec <- rep("0", length(to_go))
+
+counter <- 1
+for (i in to_go){
+  outcome <- pop[i,"n"] / (pop[i,"n"] +  pop[i-1,"n"])
+  new_vec[counter] <- outcome
+  counter <- counter + 1
+}
+
+round(new_vec[[2]], digits = 2)
+
+test <- c("", paste(as.character(round(new_vec[[1]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[2]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[3]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[4]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[5]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[6]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[7]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[8]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[9]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[10]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[11]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[12]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[13]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[14]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[15]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[16]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[17]], digits = 2)), "%", sep = ""),
+          "", paste(as.character(round(new_vec[[18]], digits = 2)), "%", sep = ""))
+
+windowsFonts(`Times New Roman` = windowsFont("Times New Roman"))
+
+# Do visual again
+ggplot(pop, aes(fill=bef_message_bool, y=n, x=hdi_class_col)) + 
+  geom_bar(position="stack", stat="identity") +
+  geom_text(size = 3.3, aes(label = test, family = "serif"), vjust = -1) + 
+  ylab("count (n)") + 
+  xlab("Human Development Index Category") +
+  theme_bw() + 
+  labs(title = expression(bold("Figure 6")),
+       subtitle = expression(italic("State Counts of HDI and Review Incidence Across Regions"))) +
+  labs(fill = "Review sent, yes (1) no (2)") + 
+  theme(text=element_text(size=13,  family="Times New Roman")) +
+  facet_wrap( ~ region, 
+              scales = "free",
+              labeller =labeller(region = c(
+                "centerwest" = "Centerwest (n = 3,537)",
+                "north" = "North (n = 1,779)",
+                "northeast" = "Northeast (n = 8,996)",
+                "south" = "South (n = 13,736)",
+                "southeast" = "Southeast (n = 64,714)",
+                "full" = "Full (n = 92,762)"))) 
+```
+One of the DVs in the research is "review length" and it's good to have a look at how it is distributed. 
+```{r }
+note = expression(paste(italic("Note. "), "Zero-length reviews were excluded from this plot."))
+ggplot(brazil_df[brazil_df$bef_message_bool == 1,], aes(x= bef_nwords)) + 
+  geom_histogram(color="black", fill="coral", size = 0.1, bins = 50) +
+  labs(caption = note) +
+  labs(title = expression(bold("Figure 7")),
+       subtitle = expression(italic("Distribution of Review Message Length Frequencies"))) +
+  xlab("Number of Words") + ylab("Count") +
+  theme(text = element_text(family = "Times New Roman", size = 18),
+        plot.title = element_text(size = 18),
+        plot.subtitle = element_text(size = 18),
+        plot.caption = element_text(hjust = 0))
+```
+
+Let's have a look at urbanity and Human Development rate across metro/non-metro regions.
+```{r }
+ggplot(brazil_df, aes(x= new_idhm)) + 
+  geom_histogram(color="black", fill="coral", size = 0.1, bins = 40) + 
+  facet_wrap(~udh_indicator) +
+  xlim(0, 1.00) + 
+  labs(title = expression(bold("Figure 3")),
+       subtitle = expression(italic("Difference in frequencies of Human Development Indices between UDH (1) and municipal data (0) cases"))) +
+  xlab("Human Development Index associated with the location of the related to case") + ylab("Count") +
+  theme(text = element_text(family = "Times New Roman", size = 14),
+        plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 14))
+
+ggplot(brazil_df, aes(x= new_urbanity)) + 
+  geom_histogram(color="black", fill="coral", size = 0.1) + 
+  facet_wrap(~udh_indicator) +
+  labs(title = expression(bold("Figure 4")),
+       subtitle = expression(italic("Difference in frequencies of urbanicity cases between UDH (1) and municipal data (0) cases"))) +
+  xlab("Ratio of urban population to total population of a single spatial unit associated with a case") + ylab("Count") +
+  theme(text = element_text(family = "Times New Roman", size = 14),
+        plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 14))
+
+
+```
+
+Full plot of the data points projected onto the map of Brazil.
+```{r message=FALSE, warning=FALSE}
+library(geobr)
+library(crul)
+library(extrafont)
+```
+
+```{r include=FALSE}
+state <- read_state(year=2010)
+```
+
+```{r message=FALSE, warning=FALSE}
+# The one 
+note = expression(paste(italic("Note. "), "Variation in longitude along latitude is not adjusted for in this graph."))
+note_2 = expression(paste(italic("Note. "), "Variation in longitude along latitude is not adjusted for in this graph. Furthermore, no map was available for this data."))
+ggplot() + geom_sf(data=state, 
+                   fill=(ifelse(state$name_region == "Norte", "deepskyblue", 
+                                ifelse(state$name_region == "Nordeste", "deepskyblue4",
+                                       ifelse(state$name_region == "Sul", "coral", 
+                                              ifelse(state$name_region == "Sudeste", "deeppink3", "chartreuse"))))), color="white", size=.15, show.legend = FALSE) +
+  labs(title = expression(bold("Figure F1")),
+       subtitle = expression(italic("Geographic Locations of Olist Dataset Cases in Brazil's five Administritave Regions"))) +
+  theme_minimal() +
+  labs(caption = note) + 
+  theme(text = element_text(family = "Times New Roman", size = 14),
+        plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 14),
+        plot.caption = element_text(hjust = 0)) +
+  annotate("text", x = -48, y = -31, label = "South", col = "coral1", family = "Times New Roman", fontface = "bold") +
+  annotate("text", x = -63, y = -18, label = "Centerwest", col = "chartreuse3", family = "Times New Roman", fontface = "bold") +
+  annotate("text", x = -47, y = 2.5, label = "North", col = "deepskyblue1", family = "Times New Roman", fontface = "bold") +
+  annotate("text", x = -32, y = -10, label = "Northeast", col = "deepskyblue4", family = "Times New Roman", fontface = "bold") +
+  annotate("text", x = -37, y = -22, label = "Southeast", col = "deeppink3", family = "Times New Roman", fontface = "bold") +
+  
+  xlab("Longitude in degrees using WGS84 (EPSG:4326)") + ylab("Latitude in degrees using WGS84 (EPSG:4326)") +
+  geom_point(aes(
+    y = brazil_df[brazil_df$centroid_lat < 10 & brazil_df$centroid_long < -30 ,]$centroid_lat, 
+    x =  brazil_df[brazil_df$centroid_lat < 10 & brazil_df$centroid_long < -30 ,]$centroid_long), size = 0.07) + theme(legend.position="bottom")
+
+```
+
+\n
+Now, let's zoom in to some of the metropolitan areas. First, load the map.
+In this case, the red dots represent external (census) data points and the black dots 
+represent the review data set (Olist) data points. Note that both data sets were connected by
+finding two points that are closest to each other for all points. 
+```{r include=FALSE}
+metros <- read_metro_area(2010)
+```
+
+Sao Paulo.
+```{r }
+ggplot() +
+  geom_sf(data=metros[metros$name_metro == "RM São Paulo",], fill="steelblue", color="black", size=.2, show.legend = FALSE) +
+  labs(title = expression(bold("Figure 2")),
+       subtitle = expression(italic("Locations of Olist data cases in RM Sao Paulo (black) overlaid with 2010 census data (red)"))) +
+  theme_minimal() +
+  labs(caption = note) + 
+  theme(text = element_text(family = "Times New Roman", size = 14),
+        plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 14),
+        plot.caption = element_text(hjust = 0)) +
+  xlab("Longitude in degrees using WGS84 (EPSG:4326)") + 
+  ylab("Latitude in degrees using WGS84 (EPSG:4326)") +
+  geom_point(aes(
+    y = brazil_df[brazil_df$metro == "sao_paulo"  & brazil_df$udh.lat < -23.2,]$centroid_lat, 
+    x =  brazil_df[brazil_df$metro == "sao_paulo"  & brazil_df$udh.lat < -23.2,]$centroid_long), col = "black", size = 0.01) +
+  geom_point(aes(
+    y = brazil_df[brazil_df$metro == "sao_paulo" & brazil_df$udh.lat < -23.2,]$udh.lat, 
+    x =  brazil_df[brazil_df$metro == "sao_paulo"  & brazil_df$udh.lat < -23.2,]$udh.long), col = "red", size = 0.2, shape = 23)
+```
+
+Rio de Janeiro.
+```{r }
+ggplot() +
+  geom_sf(data=metros[metros$name_metro == "RM Rio de Janeiro",], fill="steelblue", color="black", size=.2, show.legend = FALSE) +
+  labs(title = expression(bold("Figure B16")),
+       subtitle = expression(italic("Locations of Olist data cases in RM Rio de Janeiro (black) overlaid with 2010 census data (red)"))) +
+  theme_minimal() +
+  labs(caption = note) + 
+  theme(text = element_text(family = "Times New Roman", size = 14),
+        plot.title = element_text(size = 14),
+        plot.subtitle = element_text(size = 14),
+        plot.caption = element_text(hjust = 0)) +
+  xlab("Longitude in degrees using WGS84 (EPSG:4326)") + 
+  ylab("Latitude in degrees using WGS84 (EPSG:4326)") +
+  geom_point(aes(
+    y = brazil_df[brazil_df$metro == "rio_de_janeiro",]$centroid_lat, 
+    x =  brazil_df[brazil_df$metro == "rio_de_janeiro",]$centroid_long), col = "black", size = 0.01) +
+  geom_point(aes(
+    y = brazil_df[brazil_df$metro == "rio_de_janeiro" ,]$udh.lat, 
+    x =  brazil_df[brazil_df$metro == "rio_de_janeiro",]$udh.long), col = "red", size = 0.2, shape = 23) +
+  xlim(-44,-42.5) +
+  ylim(-23.2, -22.3)
+```
+
+__<a href="index.html">Back to main</a>__
